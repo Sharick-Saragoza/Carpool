@@ -10,10 +10,10 @@ Dit is de Carpool app project voor het faciliteren van het gebruiken van een car
    pnpm install
    ```
 
-2. Start the app
+2. Start the webapp
 
    ```bash
-   pnpx expo start
+   pnpm run web
    ```
 
 In the output, you'll find options to open the app in a
