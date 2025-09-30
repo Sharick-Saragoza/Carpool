@@ -10,8 +10,8 @@ module.exports = defineConfig([
       'prettier/prettier': [
         'error',
         {
-          singleQuote: true, // Enforce single quotes
-          // You can add other Prettier options here too
+          plugins: ['prettier-plugin-one-line-imports'],
+          singleQuote: true,
         },
       ],
     },
