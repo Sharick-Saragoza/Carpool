@@ -5,9 +5,14 @@
     "source.sortMembers": "explicit"
   },
 
+  "editor.tabSize": 4,
+  "editor.detectIndentation": false,
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.formatOnPaste": false,
   "editor.formatOnType": false,
   "editor.formatOnSave": true, 
   "editor.formatOnSaveMode": "file",
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
 }
