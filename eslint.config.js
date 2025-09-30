@@ -25,6 +25,9 @@ export default defineConfig([
             '@stylistic/arrow-spacing': 'error',
             '@stylistic/quote-props': ['error', 'as-needed'],
             '@stylistic/jsx-quotes': ['error', 'prefer-single'],
+
+            // Turn off TypeScript's indent rule to avoid conflicts
+            '@typescript-eslint/indent': 'off',
         },
     },
 ]);
