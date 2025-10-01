@@ -1,10 +1,33 @@
-// https://docs.expo.dev/guides/using-eslint/
-const { defineConfig } = require('eslint/config');
-const expoConfig = require('eslint-config-expo/flat');
+import stylistic from '@stylistic/eslint-plugin';
+import { defineConfig } from 'eslint/config';
+import typescriptEslint from 'typescript-eslint';
 
-module.exports = defineConfig([
-  expoConfig,
-  {
-    ignores: ['dist/*'],
-  },
+export default defineConfig([
+    typescriptEslint.configs.recommended,
+
+    {
+        files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+        plugins: {
+            '@stylistic': stylistic,
+        },
+        rules: {
+            '@stylistic/indent': ['error', 4],
+            '@stylistic/semi': ['error', 'always'],
+            '@stylistic/quotes': ['error', 'single'],
+            '@stylistic/no-trailing-spaces': ['error'],
+            '@stylistic/no-tabs': ['error'],
+            '@stylistic/no-multi-spaces': ['error'],
+            '@stylistic/no-mixed-spaces-and-tabs': ['error'],
+            '@stylistic/comma-dangle': ['error', 'always-multiline'],
+            '@stylistic/comma-spacing': 'error',
+            '@stylistic/array-bracket-spacing': 'error',
+            '@stylistic/object-curly-spacing': ['error', 'always'],
+            '@stylistic/arrow-spacing': 'error',
+            '@stylistic/quote-props': ['error', 'as-needed'],
+            '@stylistic/jsx-quotes': ['error', 'prefer-single'],
+
+            // Turn off TypeScript's indent rule to avoid conflicts
+            '@typescript-eslint/indent': 'off',
+        },
+    },
 ]);
