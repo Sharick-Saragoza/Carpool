@@ -7,7 +7,7 @@ Dit is de Carpool app project voor het faciliteren van het gebruiken van een car
 1. Install dependencies
 
    ```bash
-   npm install
+   pnpm install
    ```
 
 2. Start the app
