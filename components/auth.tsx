@@ -1,6 +1,6 @@
 import { supabase } from '@/utils/supabase';
 import React, { useState } from 'react';
-import { Alert, AppState, StyleSheet, View } from 'react-native';
+import { Alert, AppState, View } from 'react-native';
 import { Button, ButtonText } from './ui/button';
 import { Input, InputField } from './ui/input';
 
@@ -52,8 +52,8 @@ export default function Auth() {
     }
 
     return (
-        <View style={styles.container}>
-            <View style={[styles.verticallySpaced, styles.mt20]}>
+        <View>
+            <View>
                 <Input>
                     <InputField
                         onChangeText={(text) => setEmail(text)}
@@ -64,7 +64,7 @@ export default function Auth() {
                 </Input>
 
             </View>
-            <View style={styles.verticallySpaced}>
+            <View>
                 <Input>
                     <InputField
                         onChangeText={(text) => setPassword(text)}
@@ -75,22 +75,25 @@ export default function Auth() {
                     />
                 </Input>
             </View>
-            <View style={[styles.verticallySpaced, styles.mt20]}>
-                <Button>
-                    <ButtonText
-                        disabled={loading}
-                        onPress={() => signInWithEmail()}
-                    >
+            <View>
+                <Button
+                    disabled={loading}
+                    onPress={() => signInWithEmail()}
+                >
+                    <ButtonText>
                         Sign in
                     </ButtonText>
                 </Button>
             </View>
-            <View style={styles.verticallySpaced}>
-                <Button>
-                    <ButtonText
-                        disabled={loading}
-                        onPress={() => signUpWithEmail()}
-                    >
+            <View>
+                <Button
+                    disabled={loading}
+                    onPress={() => signUpWithEmail()}
+
+                    variant='solid'
+                    size='md'
+                    action='primary'>
+                    <ButtonText>
                         Sign Up
                     </ButtonText>
                 </Button>
@@ -98,18 +101,3 @@ export default function Auth() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        marginTop: 40,
-        padding: 12,
-    },
-    verticallySpaced: {
-        paddingTop: 4,
-        paddingBottom: 4,
-        alignSelf: 'stretch',
-    },
-    mt20: {
-        marginTop: 20,
-    },
-});

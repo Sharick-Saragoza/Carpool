@@ -1,7 +1,7 @@
 import { supabase } from '@/utils/supabase';
 import { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { Button, ButtonText } from './ui/button';
 import { Input, InputField } from './ui/input';
 
@@ -79,8 +79,8 @@ export default function Account({ session }: { session: Session }) {
     }
 
     return (
-        <View style={styles.container}>
-            <View style={[styles.verticallySpaced, styles.mt20]}>
+        <View>
+            <View>
                 <Input isDisabled={true} >
                     <InputField
                         placeholder='Email'
@@ -88,7 +88,7 @@ export default function Account({ session }: { session: Session }) {
                     />
                 </Input>
             </View>
-            <View style={styles.verticallySpaced}>
+            <View>
                 <Input >
                     <InputField
                         placeholder='Username'
@@ -97,7 +97,7 @@ export default function Account({ session }: { session: Session }) {
                     />
                 </Input>
             </View>
-            <View style={styles.verticallySpaced}>
+            <View>
                 <Input>
                     <InputField
                         placeholder='Website'
@@ -107,7 +107,7 @@ export default function Account({ session }: { session: Session }) {
                 </Input>
             </View>
 
-            <View style={[styles.verticallySpaced, styles.mt20]}>
+            <View>
                 <Button
                     onPress={() => updateProfile({ username, website, avatar_url: avatarUrl })}
                     isDisabled={loading}>
@@ -118,7 +118,7 @@ export default function Account({ session }: { session: Session }) {
 
             </View>
 
-            <View style={styles.verticallySpaced}>
+            <View>
                 <Button
                     onPress={() => supabase.auth.signOut()}
                 >
@@ -130,18 +130,3 @@ export default function Account({ session }: { session: Session }) {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        marginTop: 40,
-        padding: 12,
-    },
-    verticallySpaced: {
-        paddingTop: 4,
-        paddingBottom: 4,
-        alignSelf: 'stretch',
-    },
-    mt20: {
-        marginTop: 20,
-    },
-});
