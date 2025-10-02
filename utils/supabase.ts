@@ -1,12 +1,22 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
 import * as aesjs from 'aes-js';
+import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
 import 'react-native-get-random-values';
 
 // As Expo's SecureStore does not support values larger than 2048
 // bytes, an AES-256 key is generated and stored in SecureStore, while
 // it is used to encrypt/decrypt values stored in AsyncStorage.
+
+function getWebStorage() {
+    if (typeof window !== 'undefined' && window.localStorage) {
+        return window.localStorage;
+    }
+    return undefined;
+}
+
 class LargeSecureStore {
     private async _encrypt(key: string, value: string) {
         const encryptionKey = crypto.getRandomValues(new Uint8Array(256 / 8));
@@ -51,11 +61,11 @@ class LargeSecureStore {
 }
 
 const supabaseUrl = 'https://bsrearsgsuxczojykypr.supabase.co';
-const supabasePublishableKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzcmVhcnNnc3V4Y3pvanlreXByIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkyMjMyNDUsImV4cCI6MjA3NDc5OTI0NX0.3NVHIyA6aOk4e883w5_om6xgls64aUSONtBLOY9FJGE';
+const supabasePublishableKey = Constants.expoConfig?.extra?.supabasePublishableKey;
 
 export const supabase = createClient(supabaseUrl, supabasePublishableKey, {
     auth: {
-        storage: new LargeSecureStore(),
+        storage: Platform.OS === 'web' ? getWebStorage() : new LargeSecureStore(),
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: false,

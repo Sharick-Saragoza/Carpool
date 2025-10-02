@@ -4,10 +4,6 @@ import { Alert, AppState, StyleSheet, View } from 'react-native';
 import { Button, ButtonText } from './ui/button';
 import { Input, InputField } from './ui/input';
 
-// Tells Supabase Auth to continuously refresh the session automatically if
-// the app is in the foreground. When this is added, you will continue to receive
-// `onAuthStateChange` events with the `TOKEN_REFRESHED` or `SIGNED_OUT` event
-// if the user's session is terminated. This should only be registered once.
 AppState.addEventListener('change', (state) => {
     if (state === 'active') {
         supabase.auth.startAutoRefresh();
@@ -34,6 +30,12 @@ export default function Auth() {
 
     async function signUpWithEmail() {
         setLoading(true);
+
+        if(password.length < 6) {
+            Alert.alert('Password should be at least 6 characters.');
+            return;
+        }
+
         const {
             data: { session },
             error,
@@ -41,6 +43,8 @@ export default function Auth() {
             email: email,
             password: password,
         });
+
+        console.log(error);
 
         if (error) Alert.alert(error.message);
         if (!session) Alert.alert('Please check your inbox for email verification!');
