@@ -1,9 +1,10 @@
-import Account from '@/components/accounts';
-import Auth from '@/components/auth';
 import { supabase } from '@/utils/supabase';
 import { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
+import 'react-native-url-polyfill/auto';
+import Account from './components/accounts';
+import Auth from './components/auth';
 
 export default function App() {
     const [session, setSession] = useState<Session | null>(null);
