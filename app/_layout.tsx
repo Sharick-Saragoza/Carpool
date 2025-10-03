@@ -5,7 +5,10 @@ import { Stack } from 'expo-router';
 export default function RootLayout() {
     return (
         <GluestackUIProvider>
-            <Stack />
+            <Stack>
+                <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+                <Stack.Screen name='index' options={{ headerShown: false }} />
+            </Stack>
         </GluestackUIProvider>
     );
 }
