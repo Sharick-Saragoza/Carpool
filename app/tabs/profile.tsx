@@ -1,8 +1,6 @@
-import Auth from '@/components/Auth';
-import { Button, ButtonText } from '@/components/ui/button';
+import Account from '@/components/accounts';
 import { supabase } from '@/utils/supabase';
 import { Session } from '@supabase/supabase-js';
-import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
@@ -19,19 +17,15 @@ export default function App() {
         });
     }, []);
 
-    if (session && session.user) {
-        return (
-            <Button onPress={() => router.replace('/tabs/profile')}>
-                <ButtonText>
-                    Profile
-                </ButtonText>
-            </Button>
-        );
-    }
-
     return (
         <View>
-            <Auth />
+            {session ? (
+                <Account key={session.user.id} session={session} />
+            ) : (
+                <View>
+                    Please log in
+                </View>
+            )}
         </View>
     );
 }
