@@ -7,13 +7,13 @@ Dit is de Carpool app project voor het faciliteren van het gebruiken van een car
 1. Install dependencies
 
    ```bash
-   pnpm install
+   npm install
    ```
 
 2. Start the app
 
    ```bash
-   npx expo start --web
+   npx expo start --tunnel
    ```
 
 In the output, you'll find options to open the app in a
