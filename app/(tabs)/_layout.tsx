@@ -7,9 +7,9 @@ export default function TabLayout() {
             screenOptions={{
                 tabBarStyle: {
                     backgroundColor: '#9ca3af',
-                    height: 60,
-                    paddingBottom: 8,
-                    paddingTop: 8,
+                    height: 100,
+                    paddingBottom: 12,
+                    paddingTop: 12,
                 },
                 tabBarActiveTintColor: '#000000',
                 tabBarInactiveTintColor: '#6b7280',
@@ -19,16 +19,16 @@ export default function TabLayout() {
             <Tabs.Screen
                 name='explore'
                 options={{
-                    title: 'Explore',
+                    title: 'Ritten',
                     tabBarIcon: ({ color }) => (
-                        <Ionicons name='globe' size={28} color={color} />
+                        <Ionicons name='map' size={28} color={color} />
                     ),
                 }}
             />
             <Tabs.Screen
                 name='drive'
                 options={{
-                    title: 'Drive',
+                    title: 'Rijden',
                     tabBarIcon: ({ color }) => (
                         <Ionicons name='car-sport' size={28} color={color} />
                     ),
@@ -46,7 +46,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name='profile'
                 options={{
-                    title: 'Profile',
+                    title: 'Profiel',
                     tabBarIcon: ({ color }) => (
                         <Ionicons name='person' size={28} color={color} />
                     ),
