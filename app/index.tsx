@@ -1,14 +1,5 @@
-import { Text, View } from 'react-native';
-import Navbar from '../components/ui/navbar';
+import { Redirect } from 'expo-router';
 
 export default function Index() {
-    return (
-        <View style={{ flex: 1 }}>
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Carpools going here :D
-                </Text>
-            </View>
-            <Navbar />
-        </View>
-    );
+    return <Redirect href='/(tabs)/explore' />;
 }
