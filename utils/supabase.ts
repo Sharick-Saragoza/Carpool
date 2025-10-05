@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
 import * as aesjs from 'aes-js';
-import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import 'react-native-get-random-values';
@@ -15,50 +14,59 @@ function getWebStorage() {
 }
 
 class LargeSecureStore {
-    private async _encrypt(key: string, value: string) {
-        const encryptionKey = crypto.getRandomValues(new Uint8Array(256 / 8));
-
-        const cipher = new aesjs.ModeOfOperation.ctr(encryptionKey, new aesjs.Counter(1));
-        const encryptedBytes = cipher.encrypt(aesjs.utils.utf8.toBytes(value));
-
-        await SecureStore.setItemAsync(key, aesjs.utils.hex.fromBytes(encryptionKey));
-
-        return aesjs.utils.hex.fromBytes(encryptedBytes);
+    private async getMasterKey() {
+        let keyHex = await SecureStore.getItemAsync('MASTER_KEY');
+        if (!keyHex) {
+            const key = crypto.getRandomValues(new Uint8Array(32));
+            keyHex = aesjs.utils.hex.fromBytes(key);
+            await SecureStore.setItemAsync('MASTER_KEY', keyHex);
+        }
+        return aesjs.utils.hex.toBytes(keyHex);
     }
 
-    private async _decrypt(key: string, value: string) {
-        const encryptionKeyHex = await SecureStore.getItemAsync(key);
-        if (!encryptionKeyHex) {
-            return encryptionKeyHex;
-        }
+    private async encrypt(value: string) {
+        const key = await this.getMasterKey();
+        const iv = crypto.getRandomValues(new Uint8Array(16)); // random IV
+        const cipher = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(iv));
+        const encrypted = cipher.encrypt(aesjs.utils.utf8.toBytes(value));
 
-        const cipher = new aesjs.ModeOfOperation.ctr(aesjs.utils.hex.toBytes(encryptionKeyHex), new aesjs.Counter(1));
-        const decryptedBytes = cipher.decrypt(aesjs.utils.hex.toBytes(value));
+        return JSON.stringify({
+            iv: aesjs.utils.hex.fromBytes(iv),
+            data: aesjs.utils.hex.fromBytes(encrypted),
+        });
+    }
 
-        return aesjs.utils.utf8.fromBytes(decryptedBytes);
+    private async decrypt(value: string) {
+        const { iv, data } = JSON.parse(value);
+        const key = await this.getMasterKey();
+        const cipher = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(aesjs.utils.hex.toBytes(iv)));
+        const decrypted = cipher.decrypt(aesjs.utils.hex.toBytes(data));
+
+        return aesjs.utils.utf8.fromBytes(decrypted);
     }
 
     async getItem(key: string) {
         const encrypted = await AsyncStorage.getItem(key);
-        if (!encrypted) { return encrypted; }
+        if (!encrypted) return null;
+        return this.decrypt(encrypted);
+    }
 
-        return await this._decrypt(key, encrypted);
+    async setItem(key: string, value: string) {
+        const encrypted = await this.encrypt(value);
+        await AsyncStorage.setItem(key, encrypted);
     }
 
     async removeItem(key: string) {
         await AsyncStorage.removeItem(key);
-        await SecureStore.deleteItemAsync(key);
-    }
-
-    async setItem(key: string, value: string) {
-        const encrypted = await this._encrypt(key, value);
-
-        await AsyncStorage.setItem(key, encrypted);
     }
 }
 
 const supabaseUrl = 'https://bsrearsgsuxczojykypr.supabase.co';
-const supabasePublishableKey = Constants.expoConfig?.extra?.supabasePublishableKey;
+const supabasePublishableKey = process.env.EXPO_PUBLIC_DB_ANON_KEY;
+
+if (!supabasePublishableKey) {
+    throw new Error('Missing Supabase public key');
+}
 
 export const supabase = createClient(supabaseUrl, supabasePublishableKey, {
     auth: {
