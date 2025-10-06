@@ -1,6 +1,6 @@
 import { Spinner } from '@/components/ui/spinner';
-import { sessionContext } from '@/utils/session-context';
-import { useAuth } from '@/utils/useAuth';
+import { sessionContext } from '@/context/session-context';
+import { useAuth } from '@/context/useAuth';
 import { Ionicons } from '@expo/vector-icons';
 import { Redirect, Tabs } from 'expo-router';
 import { View } from 'react-native';
