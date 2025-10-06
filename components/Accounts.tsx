@@ -1,5 +1,5 @@
-import { useSession } from '@/utils/session-context';
-import { supabase } from '@/utils/supabase';
+import { useSession } from '@/context/session-context';
+import { supabase } from '@/context/supabase';
 import { useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { Button, ButtonText } from './ui/button';

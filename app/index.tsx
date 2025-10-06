@@ -1,6 +1,6 @@
 import Auth from '@/components/Auth';
 import { Spinner } from '@/components/ui/spinner';
-import { useAuth } from '@/utils/useAuth';
+import { useAuth } from '@/context/useAuth';
 import { Redirect } from 'expo-router';
 
 export default function Index() {
