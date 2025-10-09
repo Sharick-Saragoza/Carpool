@@ -6,18 +6,18 @@
     "useIgnoreFile": false
   },
   "files": {
-    "ignoreUnknown": false,
-    "includes": ["**", "!**/components/ui/*"]
+    "ignoreUnknown": true
   },
   "formatter": {
     "enabled": true,
+    "indentWidth": 2,
     "indentStyle": "space"
   },
   "linter": {
+    "enabled": true,
     "rules": {
       "recommended": true
-    },
-    "includes": ["**", "!**/components/ui/*"]
+    }
   },
   "javascript": {
     "formatter": {
