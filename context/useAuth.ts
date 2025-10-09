@@ -1,4 +1,4 @@
-import { supabase } from '@/context/supabase';
+import { getSupabaseClient } from '@/context/supabase';
 import { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 
@@ -38,19 +38,22 @@ export function useAuth() {
         if (devMode) {
             setSession(createMockSession());
             setLoading(false);
-        } else {
-            supabase.auth.getSession().then(({ data: { session } }) => {
-                setSession(session);
-                setLoading(false);
-            });
-
-            const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-                setSession(session);
-                setLoading(false);
-            });
-
-            return () => subscription.unsubscribe();
+            return;
         }
+
+        const supabase = getSupabaseClient();
+
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+            setLoading(false);
+        });
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session);
+            setLoading(false);
+        });
+
+        return () => subscription.unsubscribe();
     }, []);
 
     return { session, loading };

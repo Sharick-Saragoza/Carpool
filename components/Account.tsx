@@ -1,5 +1,5 @@
 import { useSession } from '@/context/session-context';
-import { supabase } from '@/context/supabase';
+import { getSupabaseClient } from '@/context/supabase';
 import { getRecord } from '@/libs/getRecord';
 import { getUserCars } from '@/libs/getUserCars';
 import { saveCarData } from '@/libs/saveCarData';
@@ -13,6 +13,7 @@ import UserAvatar from './UserAvatar';
 
 export default function Account() {
     const session = useSession();
+    const devMode = process.env.EXPO_PUBLIC_DEV_MODE === 'true';
     const [loading, setLoading] = useState(true);
 
     const [fullName, setFullName] = useState('');
@@ -35,18 +36,33 @@ export default function Account() {
         postal_code: string;
     }
 
+    const userId = session.user.id;
+
     useEffect(() => {
         if (session.user) fetchUserData();
     }, [session]);
-
-    const userId = session.user.id;
 
     async function fetchUserData() {
         try {
             setLoading(true);
 
+            if (devMode) {
+                // Mock profile and car for dev mode
+                setFullName('Development User');
+                setPhone('+1234567890');
+                setAvatarUrl('');
+                setAddress('123 Dev St');
+                setPostalCode('00000');
+                setCarId('dev-car-id');
+                setBrand('DevBrand');
+                setModel('DevModel');
+                setSeats(4);
+                setColor('Red');
+                return;
+            }
+
             const [profile, car] = await Promise.all([
-                getRecord<Profile>('profiles', session.user.id),
+                getRecord<Profile>('profiles', userId),
                 getUserCars(userId),
             ]);
 
@@ -58,8 +74,6 @@ export default function Account() {
                 setPostalCode(profile.postal_code);
             }
 
-            console.log(car.brand);
-
             if (car) {
                 setCarId(car.id);
                 setBrand(car.brand);
@@ -67,7 +81,6 @@ export default function Account() {
                 setSeats(car.seats);
                 setColor(car.color);
             }
-
         } catch (error) {
             showError(error);
         } finally {
@@ -78,14 +91,17 @@ export default function Account() {
     const handleAvatarUpload = async (url: string) => {
         setAvatarUrl(url);
 
+        if (devMode) {
+            console.log('[DEV MODE] Avatar uploaded:', url);
+            Alert.alert('Avatar updated! (dev mode)');
+            return;
+        }
+
         try {
             await updateRecord({
                 session,
                 table: 'profiles',
-                data: {
-                    id: session.user.id,
-                    avatar_url: url,
-                },
+                data: { id: userId, avatar_url: url },
             });
             Alert.alert('Avatar updated!');
         } catch (error) {
@@ -97,11 +113,26 @@ export default function Account() {
         try {
             setLoading(true);
 
+            if (devMode) {
+                console.log('[DEV MODE] Profile updated:', {
+                    fullName,
+                    phone,
+                    address,
+                    postalCode,
+                    brand,
+                    model,
+                    seats,
+                    color,
+                });
+                Alert.alert('Profile updated! (dev mode)');
+                return;
+            }
+
             await updateRecord({
                 session,
                 table: 'profiles',
                 data: {
-                    id: session.user.id,
+                    id: userId,
                     full_name: fullName,
                     phone: phone,
                     address: address,
@@ -115,7 +146,7 @@ export default function Account() {
                     carId,
                     brand,
                     model,
-                    seats: seats ?? 0, // fallback only if actually saving
+                    seats: seats ?? 0,
                     color,
                 });
                 setCarId(id);
@@ -134,7 +165,6 @@ export default function Account() {
         { isdisabled: false, placeholder: 'Phone', value: phone, setter: setPhone },
         { isdisabled: false, placeholder: 'Address', value: address, setter: setAddress },
         { isdisabled: false, placeholder: 'Postal Code', value: postalCode, setter: setPostalCode },
-
     ];
 
     const car = [
@@ -142,7 +172,6 @@ export default function Account() {
         { isdisabled: true, placeholder: 'Model', value: model, setter: setModel },
         { isdisabled: true, placeholder: 'Color', value: color, setter: setColor },
         { isdisabled: true, placeholder: 'Seats', value: seats, setter: setSeats },
-
     ];
 
     return (
@@ -150,15 +179,12 @@ export default function Account() {
             <UserAvatar
                 size={200}
                 url={avatarUrl}
-                onUpload={(url: string) => {
-                    setAvatarUrl(url);
-                    handleAvatarUpload(url);
-                }}
+                onUpload={(url: string) => handleAvatarUpload(url)}
             />
 
             <View className='mb-20'>
-                {profile.map(({ isdisabled, placeholder, value, setter }) => (
-                    <Input isDisabled={isdisabled}>
+                {profile.map(({ isdisabled, placeholder, value, setter }, i) => (
+                    <Input key={i} isDisabled={isdisabled}>
                         <InputField
                             placeholder={placeholder}
                             value={value}
@@ -169,8 +195,8 @@ export default function Account() {
             </View>
 
             <View>
-                {car.map(({ isdisabled, placeholder, value, setter }) => (
-                    <Input isDisabled={isdisabled}>
+                {car.map(({ isdisabled, placeholder, value, setter }, i) => (
+                    <Input key={i} isDisabled={isdisabled}>
                         <InputField
                             placeholder={placeholder}
                             value={value}
@@ -181,19 +207,26 @@ export default function Account() {
             </View>
 
             <View>
-                <Button
-                    onPress={updateProfile}
-                    disabled={loading}
-                >
+                <Button onPress={updateProfile} disabled={loading}>
                     <ButtonText>{loading ? 'Loading ...' : 'Update'}</ButtonText>
                 </Button>
             </View>
 
             <View>
-                <Button onPress={() => supabase.auth.signOut()}>
+                <Button
+                    onPress={async () => {
+                        if (devMode) {
+                            console.log('[DEV MODE] Sign out skipped');
+                            Alert.alert('Signed out! (dev mode)');
+                            return;
+                        }
+                        const supabase = getSupabaseClient();
+                        await supabase.auth.signOut();
+                    }}
+                >
                     <ButtonText>Sign out</ButtonText>
                 </Button>
             </View>
         </View>
     );
-};
+}

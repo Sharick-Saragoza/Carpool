@@ -1,6 +1,9 @@
-import { supabase } from '@/context/supabase';
+import { getSupabaseClient } from '@/context/supabase';
 
 export async function getUserCars(userId: string) {
+    const supabase = getSupabaseClient();
+
+
     const { data, error } = await supabase
         .from('cars')
         .select('*')

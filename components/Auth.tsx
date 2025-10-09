@@ -1,6 +1,6 @@
-import React, { useState, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, AppState, View } from 'react-native';
-import { supabase } from '@/context/supabase';
+import { getSupabaseClient, supabase } from '@/context/supabase';
 import { supabase } from '@/utils/supabase';
 import { Button, ButtonSpinner, ButtonText } from './ui/button';
 import {
@@ -11,13 +11,7 @@ import {
 import { Input, InputField } from './ui/input';
 import { VStack } from './ui/vstack';
 
-AppState.addEventListener('change', (state) => {
-  if (state === 'active') {
-    supabase.auth.startAutoRefresh();
-  } else {
-    supabase.auth.stopAutoRefresh();
-  }
-});
+const supabase = getSupabaseClient();
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -27,6 +21,17 @@ export default function Auth() {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        supabase.auth.startAutoRefresh();
+      } else {
+        supabase.auth.stopAutoRefresh();
+      }
+    });
+    return () => subscription.remove();
+  }, [supabase]);
 
   async function signInWithEmail() {
     setLoading(true);

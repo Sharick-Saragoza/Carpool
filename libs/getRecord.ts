@@ -1,10 +1,12 @@
-import { supabase } from '@/context/supabase';
+import { getSupabaseClient } from '@/context/supabase';
 
 export async function getRecord<T>(
     table: string,
     userId: string,
     matchField: string = 'id',
 ): Promise<T | null> {
+    const supabase = getSupabaseClient();
+
     try {
         const { data, error, status } = await supabase
             .from(table)

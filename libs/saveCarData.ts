@@ -1,4 +1,4 @@
-import { supabase } from '@/context/supabase';
+import { getSupabaseClient } from '@/context/supabase';
 
 export async function saveCarData({
     userId,
@@ -9,18 +9,20 @@ export async function saveCarData({
     color,
 }: {
     userId: string;
-    carId: string;
+    carId?: string;
     brand: string;
     model: string;
     seats: number;
     color: string;
-}) {
+}): Promise<string> {
+    const supabase = getSupabaseClient();
+
     if (carId) {
         const { error } = await supabase
             .from('cars')
-            .update({ brand, model, seats, color, updated_at: new Date() })
+            .update({ brand, model, seats, color, updated_at: new Date().toISOString() })
             .eq('id', carId);
-        if(error) throw error;
+        if (error) throw error;
         return carId;
     }
 
@@ -32,4 +34,4 @@ export async function saveCarData({
 
     if (error) throw error;
     return data.id;
-};
+}
