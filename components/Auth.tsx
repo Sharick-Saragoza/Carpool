@@ -11,261 +11,186 @@ import {
 import { Input, InputField } from './ui/input';
 import { VStack } from './ui/vstack';
 
-const supabase = getSupabaseClient();
-
 export default function Auth() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [repeatPassword, setRepeatPassword] = useState('');
+    const [fullName, setFullName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [isSignUp, setIsSignUp] = useState(false);
 
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', (state) => {
-      if (state === 'active') {
-        supabase.auth.startAutoRefresh();
-      } else {
-        supabase.auth.stopAutoRefresh();
-      }
-    });
-    return () => subscription.remove();
-  }, [supabase]);
+    const devMode = process.env.EXPO_PUBLIC_DEV_MODE === 'true';
 
-  async function signInWithEmail() {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
+    useEffect(() => {
+        const subscription = AppState.addEventListener('change', (state) => {
+            const supabase = getSupabaseClient();
+            if (!supabase) return;
 
-    if (error) Alert.alert(error.message);
-    setLoading(false);
-  }
+            if (state === 'active') {
+                supabase.auth.startAutoRefresh();
+            } else {
+                supabase.auth.stopAutoRefresh();
+            }
+        });
 
-  async function signUpWithEmail() {
-    setLoading(true);
+        return () => subscription.remove();
+    }, []);
 
-    if (password.length < 6) {
-      Alert.alert('Password should be at least 6 characters.');
-      return;
+    async function signInWithEmail() {
+        if (devMode) {
+            console.log('[DEV MODE] Sign In skipped', { email, password });
+            Alert.alert('Signed in (dev mode)');
+            return;
+        }
+
+        const supabase = getSupabaseClient();
+        if (!supabase) return;
+
+        setLoading(true);
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) Alert.alert(error.message);
+        setLoading(false);
     }
 
-    if (repeatPassword !== password) {
-      Alert.alert('Passwords do not match');
-      return;
+    async function signUpWithEmail() {
+        if (password.length < 6) {
+            Alert.alert('Password should be at least 6 characters.');
+            return;
+        }
+
+        if (repeatPassword !== password) {
+            Alert.alert('Passwords do not match');
+            return;
+        }
+
+        if (devMode) {
+            console.log('[DEV MODE] Sign Up skipped', { email, password, fullName, phone });
+            Alert.alert('Account created (dev mode)');
+            return;
+        }
+
+        const supabase = getSupabaseClient();
+        if (!supabase) return;
+
+        setLoading(true);
+
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            phone,
+            options: {
+                data: { full_name: fullName, email, phone },
+            },
+        });
+
+        if (error) Alert.alert(error.message);
+        if (!data.session) Alert.alert('Please check your inbox for email verification!');
+        setLoading(false);
     }
 
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-      phone: phone,
-      options: {
-        data: {
-          full_name: fullName,
-          email: email,
-          phone: phone,
-        },
-      },
-    });
-
-    if (error) Alert.alert(error.message);
-    if (!session)
-      Alert.alert('Please check your inbox for email verification!');
-    setLoading(false);
-  }
-
-  if (isSignUp) {
     return (
-      <VStack className="m-10">
-        <FormControl
-          size="md"
-          isDisabled={loading}
-          isReadOnly={loading}
-          isRequired={true}
-        >
-          <FormControlLabel>
-            <FormControlLabelText>Email</FormControlLabelText>
-          </FormControlLabel>
-          <Input className="my-1" size="md">
-            <InputField
-              type="text"
-              placeholder="Email"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-            />
-          </Input>
-        </FormControl>
+        <VStack className='m-10'>
+            <FormControl size='md' isDisabled={loading} isReadOnly={loading} isRequired>
+                <FormControlLabel>
+                    <FormControlLabelText>Email</FormControlLabelText>
+                </FormControlLabel>
+                <Input className='my-1' size='md'>
+                    <InputField
+                        type='text'
+                        placeholder='Email'
+                        value={email}
+                        onChangeText={setEmail}
+                    />
+                </Input>
+            </FormControl>
 
-        <FormControl
-          size="md"
-          isDisabled={loading}
-          isReadOnly={loading}
-          isRequired={true}
-        >
-          <FormControlLabel>
-            <FormControlLabelText>Password</FormControlLabelText>
-          </FormControlLabel>
-          <Input className="my-1" size="md">
-            <InputField
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-            />
-          </Input>
-        </FormControl>
+            <FormControl size='md' isDisabled={loading} isReadOnly={loading} isRequired>
+                <FormControlLabel>
+                    <FormControlLabelText>Password</FormControlLabelText>
+                </FormControlLabel>
+                <Input className='my-1' size='md'>
+                    <InputField
+                        type='password'
+                        placeholder='Password'
+                        value={password}
+                        onChangeText={setPassword}
+                    />
+                </Input>
+            </FormControl>
 
-        <FormControl
-          size="md"
-          isDisabled={loading}
-          isReadOnly={loading}
-          isRequired={true}
-        >
-          <FormControlLabel>
-            <FormControlLabelText>Repeat Password</FormControlLabelText>
-          </FormControlLabel>
-          <Input className="my-1" size="md">
-            <InputField
-              type="password"
-              placeholder="Repeat Password"
-              value={repeatPassword}
-              onChangeText={(text) => setRepeatPassword(text)}
-            />
-          </Input>
-        </FormControl>
+            {isSignUp && (
+                <>
+                    <FormControl size='md' isDisabled={loading} isReadOnly={loading} isRequired>
+                        <FormControlLabel>
+                            <FormControlLabelText>Repeat Password</FormControlLabelText>
+                        </FormControlLabel>
+                        <Input className='my-1' size='md'>
+                            <InputField
+                                type='password'
+                                placeholder='Repeat Password'
+                                value={repeatPassword}
+                                onChangeText={setRepeatPassword}
+                            />
+                        </Input>
+                    </FormControl>
 
-        <FormControl
-          size="md"
-          isDisabled={loading}
-          isReadOnly={loading}
-          isRequired={true}
-        >
-          <FormControlLabel>
-            <FormControlLabelText>Full name</FormControlLabelText>
-          </FormControlLabel>
-          <Input className="my-1" size="md">
-            <InputField
-              type="text"
-              placeholder="Full name"
-              value={fullName}
-              onChangeText={(text) => setFullName(text)}
-            />
-          </Input>
-        </FormControl>
+                    <FormControl size='md' isDisabled={loading} isReadOnly={loading} isRequired>
+                        <FormControlLabel>
+                            <FormControlLabelText>Full name</FormControlLabelText>
+                        </FormControlLabel>
+                        <Input className='my-1' size='md'>
+                            <InputField
+                                type='text'
+                                placeholder='Full name'
+                                value={fullName}
+                                onChangeText={setFullName}
+                            />
+                        </Input>
+                    </FormControl>
 
-        <FormControl
-          size="md"
-          isDisabled={loading}
-          isReadOnly={false}
-          isRequired={true}
-        >
-          <FormControlLabel>
-            <FormControlLabelText>Phone</FormControlLabelText>
-          </FormControlLabel>
-          <Input className="my-1" size="md">
-            <InputField
-              type="text"
-              placeholder="Phone"
-              value={phone}
-              onChangeText={(text) => setPhone(text)}
-            />
-          </Input>
-        </FormControl>
+                    <FormControl size='md' isDisabled={loading} isReadOnly={false} isRequired>
+                        <FormControlLabel>
+                            <FormControlLabelText>Phone</FormControlLabelText>
+                        </FormControlLabel>
+                        <Input className='my-1' size='md'>
+                            <InputField
+                                type='text'
+                                placeholder='Phone'
+                                value={phone}
+                                onChangeText={setPhone}
+                            />
+                        </Input>
+                    </FormControl>
+                </>
+            )}
 
-        <View className="flex flex-row self-end">
-          <Button
-            disabled={loading}
-            onPress={() => setIsSignUp(false)}
-            className="ml-4"
-            variant="outline"
-            size="md"
-            action="secondary"
-          >
-            <ButtonText>Back to Sign In</ButtonText>
-          </Button>
+            <View className='flex flex-row self-end mt-4'>
+                {isSignUp && (
+                    <Button
+                        disabled={loading}
+                        onPress={() => setIsSignUp(false)}
+                        className='ml-4'
+                        variant='outline'
+                        size='md'
+                        action='secondary'
+                    >
+                        <ButtonText>Back to Sign In</ButtonText>
+                    </Button>
+                )}
 
-          <Button
-            disabled={loading}
-            onPress={() => signUpWithEmail()}
-            className="ml-4"
-            variant="solid"
-            size="md"
-            action="primary"
-          >
-            {loading && <ButtonSpinner color="gray" />}
-            <ButtonText>Create Account</ButtonText>
-          </Button>
-        </View>
-      </VStack>
+                <Button
+                    disabled={loading}
+                    onPress={isSignUp ? signUpWithEmail : signInWithEmail}
+                    className='ml-4'
+                    variant='solid'
+                    size='md'
+                    action='primary'
+                >
+                    {loading && <ButtonSpinner color='gray' />}
+                    <ButtonText>{isSignUp ? 'Create Account' : 'Sign In'}</ButtonText>
+                </Button>
+            </View>
+        </VStack>
     );
-  }
-
-  return (
-    <VStack className="m-10">
-      <FormControl
-        size="md"
-        isDisabled={loading}
-        isReadOnly={loading}
-        isRequired={true}
-      >
-        <FormControlLabel>
-          <FormControlLabelText>Email</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1" size="md">
-          <InputField
-            type="text"
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
-        </Input>
-      </FormControl>
-
-      <FormControl
-        size="md"
-        isDisabled={loading}
-        isReadOnly={loading}
-        isRequired={true}
-      >
-        <FormControlLabel>
-          <FormControlLabelText>Password</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1" size="md">
-          <InputField
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-          />
-        </Input>
-      </FormControl>
-      <View className="flex flex-row self-end">
-        <Button
-          onPress={() => setIsSignUp(true)}
-          className="ml-4"
-          variant="solid"
-          size="md"
-          action="primary"
-        >
-          <ButtonText>Sign up</ButtonText>
-        </Button>
-        <Button
-          disabled={loading}
-          onPress={() => signInWithEmail()}
-          className="ml-4"
-          variant="solid"
-          size="md"
-          action="primary"
-        >
-          {loading && <ButtonSpinner color="gray" />}
-          <ButtonText>Sign In</ButtonText>
-        </Button>
-      </View>
-    </VStack>
-  );
 }
