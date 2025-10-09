@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import * as aesjs from 'aes-js';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
@@ -61,18 +61,26 @@ class LargeSecureStore {
     }
 }
 
-const supabaseUrl = 'https://bsrearsgsuxczojykypr.supabase.co';
-const supabasePublishableKey = process.env.EXPO_PUBLIC_DB_ANON_KEY;
+let _supabase: SupabaseClient | null = null;
 
-if (!supabasePublishableKey) {
-    throw new Error('Missing Supabase public key');
+export function getSupabaseClient() {
+    if (_supabase) return _supabase;
+
+    const supabaseUrl = 'https://bsrearsgsuxczojykypr.supabase.co';
+    const supabasePublishableKey = process.env.EXPO_PUBLIC_DB_ANON_KEY;
+
+    if (!supabasePublishableKey) {
+        throw new Error('Missing Supabase public key');
+    }
+
+    _supabase = createClient(supabaseUrl, supabasePublishableKey, {
+        auth: {
+            storage: Platform.OS === 'web' ? getWebStorage() : new LargeSecureStore(),
+            autoRefreshToken: true,
+            persistSession: true,
+            detectSessionInUrl: false,
+        },
+    });
+
+    return _supabase;
 }
-
-export const supabase = createClient(supabaseUrl, supabasePublishableKey, {
-    auth: {
-        storage: Platform.OS === 'web' ? getWebStorage() : new LargeSecureStore(),
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: false,
-    },
-});

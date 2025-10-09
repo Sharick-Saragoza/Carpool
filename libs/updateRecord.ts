@@ -1,4 +1,4 @@
-import { supabase } from '@/context/supabase';
+import { getSupabaseClient } from '@/context/supabase';
 import { Session } from '@supabase/supabase-js';
 
 export async function updateRecord<T extends Record<string, unknown>>({
@@ -16,16 +16,18 @@ export async function updateRecord<T extends Record<string, unknown>>({
 }): Promise<void> {
     if (!session?.user) throw new Error('No user on the session!');
 
+    const supabase = getSupabaseClient();
+
     try {
         const targetMatchValue = matchValue || session.user.id;
 
-        console.log(data);
+        console.log('Updating data:', data);
 
         const { error } = await supabase
             .from(table)
             .upsert({
                 ...data,
-                updated_at: new Date(),
+                updated_at: new Date().toISOString(),
             })
             .eq(matchField, targetMatchValue);
 
