@@ -24,7 +24,7 @@ export default function Account() {
     const [carId, setCarId] = useState<string>('');
     const [brand, setBrand] = useState('');
     const [model, setModel] = useState('');
-    const [seats, setSeats] = useState<number>(0);
+    const [seats, setSeats] = useState<number | null>(null);
     const [color, setColor] = useState('');
 
     interface Profile {
@@ -109,8 +109,17 @@ export default function Account() {
                 },
             });
 
-            const id = await saveCarData({ userId, carId, brand, model, seats, color });
-            setCarId(id);
+            if (brand || model || color || seats) {
+                const id = await saveCarData({
+                    userId,
+                    carId,
+                    brand,
+                    model,
+                    seats: seats ?? 0, // fallback only if actually saving
+                    color,
+                });
+                setCarId(id);
+            }
 
             Alert.alert('Profile updated successfully!');
         } catch (error) {
