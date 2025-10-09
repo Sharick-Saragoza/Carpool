@@ -221,6 +221,8 @@ export default function Account() {
                             return;
                         }
                         const supabase = getSupabaseClient();
+                        if (!supabase) return;
+
                         await supabase.auth.signOut();
                     }}
                 >

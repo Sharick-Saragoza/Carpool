@@ -42,18 +42,21 @@ export function useAuth() {
         }
 
         const supabase = getSupabaseClient();
+        if (!supabase) return;
 
-        supabase.auth.getSession().then(({ data: { session } }) => {
+        supabase.auth.getSession().then(({ data }) => {
+            setSession(data.session);
+            setLoading(false);
+        });
+
+        const subscription = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
             setLoading(false);
         });
 
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-            setLoading(false);
-        });
-
-        return () => subscription.unsubscribe();
+        return () => {
+            subscription.data.subscription.unsubscribe();
+        };
     }, []);
 
     return { session, loading };
