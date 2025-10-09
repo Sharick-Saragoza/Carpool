@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { Button, ButtonText } from './ui/button';
 import { Input, InputField } from './ui/input';
+import UserAvatar from './UserAvatar';
 
 export default function Account() {
     const session = useSession();
@@ -57,6 +58,8 @@ export default function Account() {
                 setPostalCode(profile.postal_code);
             }
 
+            console.log(car.brand);
+
             if (car) {
                 setCarId(car.id);
                 setBrand(car.brand);
@@ -72,6 +75,24 @@ export default function Account() {
         }
     }
 
+    const handleAvatarUpload = async (url: string) => {
+        setAvatarUrl(url);
+
+        try {
+            await updateRecord({
+                session,
+                table: 'profiles',
+                data: {
+                    id: session.user.id,
+                    avatar_url: url,
+                },
+            });
+            Alert.alert('Avatar updated!');
+        } catch (error) {
+            showError(error);
+        }
+    };
+
     const updateProfile = async () => {
         try {
             setLoading(true);
@@ -85,7 +106,6 @@ export default function Account() {
                     phone: phone,
                     address: address,
                     postal_code: postalCode,
-                    avatar_url: avatarUrl,
                 },
             });
 
@@ -101,15 +121,15 @@ export default function Account() {
     };
 
     const profile = [
-        { isdisabled: true, placeholder: 'Full Name', value: fullName, setter: setFullName },
-        { isdisabled: true, placeholder: 'Phone', value: phone, setter: setPhone },
-        { isdisabled: true, placeholder: 'Address', value: address, setter: setAddress },
-        { isdisabled: true, placeholder: 'Postal Code', value: postalCode, setter: setPostalCode },
+        { isdisabled: false, placeholder: 'Full Name', value: fullName, setter: setFullName },
+        { isdisabled: false, placeholder: 'Phone', value: phone, setter: setPhone },
+        { isdisabled: false, placeholder: 'Address', value: address, setter: setAddress },
+        { isdisabled: false, placeholder: 'Postal Code', value: postalCode, setter: setPostalCode },
 
     ];
 
     const car = [
-        { isdisabled: true, placeholder: 'Car Brand', value: brand, setter: setBrand },
+        { isdisabled: false, placeholder: 'Car Brand', value: brand, setter: setBrand },
         { isdisabled: true, placeholder: 'Model', value: model, setter: setModel },
         { isdisabled: true, placeholder: 'Color', value: color, setter: setColor },
         { isdisabled: true, placeholder: 'Seats', value: seats, setter: setSeats },
@@ -118,6 +138,15 @@ export default function Account() {
 
     return (
         <View>
+            <UserAvatar
+                size={200}
+                url={avatarUrl}
+                onUpload={(url: string) => {
+                    setAvatarUrl(url);
+                    handleAvatarUpload(url);
+                }}
+            />
+
             <View className='mb-20'>
                 {profile.map(({ isdisabled, placeholder, value, setter }) => (
                     <Input isDisabled={isdisabled}>
