@@ -1,7 +1,7 @@
-{ 
-    "recommendations": [
+{
+  "recommendations": [
     "expo.vscode-expo-tools",
-    "dbaeumer.vscode-eslint",
+    "biomejs.biome",
     "ecmel.vscode-html-css",
     "dsznajder.es7-react-js-snippets",
     "formulahendry.auto-rename-tag",
@@ -9,4 +9,5 @@
     "christian-kohler.path-intellisense",
     "msjsdiag.vscode-react-native",
     ] 
+
 }
