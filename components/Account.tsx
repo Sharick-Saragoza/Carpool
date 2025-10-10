@@ -216,7 +216,7 @@ export default function Account() {
   return (
     <View className="p-4">
       <UserAvatar
-        size={200}
+        size={100}
         url={avatarUrl}
         onUpload={(url: string) => handleAvatarUpload(url)}
       />
@@ -235,13 +235,12 @@ export default function Account() {
       </View>
 
       <View className="mb-6">
-        {car.map(({ disabled, label, value, setter }, i) => (
+        {car.map(({label, value, setter }, i) => (
           <TextInput
             key={i}
             label={label}
             value={value}
             onChangeText={setter}
-            disabled={disabled}
           />
         ))}
       </View>
