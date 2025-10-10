@@ -1,15 +1,18 @@
-module.exports = function (api) {
+module.exports = (api) => {
   api.cache(true);
 
   return {
     presets: [['babel-preset-expo'], 'nativewind/babel'],
-
+    env: {
+      production: {
+        plugins: ['react-native-paper/babel']
+      }
+    },
     plugins: [
       [
         'module-resolver',
         {
           root: ['./'],
-
           alias: {
             '@': './',
             'tailwind.config': './tailwind.config.js',
