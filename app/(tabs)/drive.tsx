@@ -1,52 +1,57 @@
-import { Card } from '@/components/ui/card';
-import { Heading } from '@/components/ui/heading';
-import { Text as CustomText } from '@/components/ui/text';
 import React from 'react';
-import { Image, TouchableOpacity, View } from 'react-native';
-import Svg, { Line } from 'react-native-svg';
+import { Image, View } from 'react-native';
+import { Card, IconButton, Text } from 'react-native-paper';
 
 export default function MakeCarpool() {
-    return (
-        <View className='flex-1 p-4'>
-            {/* Plus knop */}
-            <TouchableOpacity className='w-10 h-10 rounded-lg bg-blue-600 justify-center items-center'>
-                <Svg width='20' height='20' viewBox='0 0 24 24'>
-                    <Line x1='12' y1='5' x2='12' y2='19' stroke='white' strokeWidth='3' />
-                    <Line x1='5' y1='12' x2='19' y2='12' stroke='white' strokeWidth='3' />
-                </Svg>
-            </TouchableOpacity>
+  return (
+    <View className="flex-1 p-4">
+      {/* Plus button */}
+      <IconButton
+        icon="plus"
+        mode="contained"
+        size={20}
+        iconColor="white"
+        containerColor="#2563eb"
+        onPress={() => console.log('Pressed')}
+      />
 
-            {/* Carpool Card */}
-            <CarpoolCard
-                profileImage='https://randomuser.me/api/portraits/men/32.jpg'
-                from='Amsterdam'
-                to='Utrecht'
-                time='08:00 - 09:00'
-            />
-        </View>
-    );
+      {/* Carpool Card */}
+      <CarpoolCard
+        profileImage="https://randomuser.me/api/portraits/men/32.jpg"
+        from="Amsterdam"
+        to="Utrecht"
+        time="08:00 - 09:00"
+      />
+    </View>
+  );
 }
 
 function CarpoolCard({ profileImage, from, to, time }) {
-    return (
-        <Card size='md' variant='elevated' className='my-2 p-3 bg-red-500'>
-            <View className='flex-row items-center'>
-                {/* Profielfoto */}
-                <Image
-                    source={{ uri: profileImage }}
-                    className='w-12 h-12 rounded-full mr-4'
-                />
+  return (
+    <Card mode="elevated" className="my-2 p-3">
+      <Card.Content>
+        <View className="flex-row items-center">
+          {/* Profile image */}
+          {profileImage ? (
+            <Image
+              source={{ uri: profileImage }}
+              className="w-12 h-12 rounded-full mr-4"
+            />
+          ) : (
+            <IconButton icon="account" size={24} className="mr-2" />
+          )}
 
-                {/* Info rechts */}
-                <View className='flex-1'>
-                    <Heading size='md'>
-                        {from} → {to}
-                    </Heading>
-                    <CustomText size='sm' className='mt-1'>
-                        {time}
-                    </CustomText>
-                </View>
-            </View>
-        </Card>
-    );
+          {/* Info right */}
+          <View className="flex-1">
+            <Text variant="titleMedium" className="font-bold">
+              {from} → {to}
+            </Text>
+            <Text variant="bodyMedium" className="mt-1 text-gray-600">
+              {time}
+            </Text>
+          </View>
+        </View>
+      </Card.Content>
+    </Card>
+  );
 }
