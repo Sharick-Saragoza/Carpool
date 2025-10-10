@@ -1,8 +1,13 @@
 import { getSupabaseClient } from '@/context/supabase';
 import React, { useEffect, useState } from 'react';
 import { Alert, AppState, View } from 'react-native';
+import { supabase } from '@/utils/supabase';
 import { Button, ButtonSpinner, ButtonText } from './ui/button';
-import { FormControl, FormControlLabel, FormControlLabelText } from './ui/form-control';
+import {
+  FormControl,
+  FormControlLabel,
+  FormControlLabelText,
+} from './ui/form-control';
 import { Input, InputField } from './ui/input';
 import { VStack } from './ui/vstack';
 
