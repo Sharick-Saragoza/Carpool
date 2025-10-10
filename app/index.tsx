@@ -1,28 +1,26 @@
 import Auth from '@/components/Auth';
-import { supabase } from '@/utils/supabase';
-import { Session } from '@supabase/supabase-js';
+import { Spinner } from '@/components/ui/spinner';
+import { useAuth } from '@/context/useAuth';
 import { Redirect } from 'expo-router';
-import { useEffect, useState } from 'react';
 
 export default function Index() {
-    const [session, setSession] = useState<Session | null>(null);
+    const { session, loading } = useAuth();
 
-    useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-        });
-        supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-        });
-    }, []);
+    if(loading){
+        return (
+            <Spinner />
+        );
+    }
 
-    if(session && session.user) {
-        return <Redirect href='/(tabs)/explore' />;
-    } else {
+    if (!session) {
         return (
             <Auth/>
         );
     }
 
-
+    if (session) {
+        return (
+            <Redirect href='/(tabs)/explore'/>
+        );
+    }
 }
