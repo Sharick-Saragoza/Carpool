@@ -214,14 +214,14 @@ export default function Account() {
   ];
 
   return (
-    <View className="p-4">
+    <View>
       <UserAvatar
         size={100}
         url={avatarUrl}
         onUpload={(url: string) => handleAvatarUpload(url)}
       />
 
-      <View className="mb-6">
+      <View className="mb-5">
         {profile.map(({ disabled, label, value, setter }, i) => (
           <TextInput
             key={i}
