@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Alert, AppState, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
@@ -36,10 +35,10 @@ export default function Auth() {
       Alert.alert('Signed in (dev mode)');
       return;
     }
-
+  
     const supabase = getSupabaseClient();
     if (!supabase) return;
-
+    
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -180,7 +179,7 @@ export default function Auth() {
 
           <Button
             disabled={loading}
-            onPress={() => signInWithEmail}
+            onPress={() => signInWithEmail()}
             loading={loading}
             mode='contained'
           >
