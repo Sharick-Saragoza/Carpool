@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Redirect, Tabs } from 'expo-router';
 import { ActivityIndicator, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
@@ -38,8 +38,8 @@ export default function TabLayout() {
           name="explore"
           options={{
             title: 'Ritten',
-            tabBarIcon: ({ color }) => (
-              <Ionicons name="map" size={28} color={color} />
+            tabBarIcon: ({ size, color }) => (
+              <MaterialCommunityIcons name="map" size={size} color={color} />
             ),
           }}
         />
@@ -47,8 +47,12 @@ export default function TabLayout() {
           name="drive"
           options={{
             title: 'Rijden',
-            tabBarIcon: ({ color }) => (
-              <Ionicons name="car-sport" size={28} color={color} />
+            tabBarIcon: ({ size, color }) => (
+              <MaterialCommunityIcons
+                name="car-sports"
+                size={size}
+                color={color}
+              />
             ),
           }}
         />
@@ -56,8 +60,8 @@ export default function TabLayout() {
           name="chat"
           options={{
             title: 'Chat',
-            tabBarIcon: ({ color }) => (
-              <Ionicons name="chatbubble" size={28} color={color} />
+            tabBarIcon: ({ size, color }) => (
+              <MaterialCommunityIcons name="chat" size={size} color={color} />
             ),
           }}
         />
@@ -65,8 +69,12 @@ export default function TabLayout() {
           name="profile"
           options={{
             title: 'Profiel',
-            tabBarIcon: ({ color }) => (
-              <Ionicons name="person" size={28} color={color} />
+            tabBarIcon: ({ size, color }) => (
+              <MaterialCommunityIcons
+                name="account"
+                size={size}
+                color={color}
+              />
             ),
           }}
         />
