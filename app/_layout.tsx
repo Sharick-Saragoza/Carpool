@@ -1,14 +1,14 @@
-import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 import '@/global.css';
 import { Stack } from 'expo-router';
+import { PaperProvider } from 'react-native-paper';
 
 export default function RootLayout() {
-    return (
-        <GluestackUIProvider>
-            <Stack>
-                <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-                <Stack.Screen name='index' options={{ headerShown: false }} />
-            </Stack>
-        </GluestackUIProvider>
-    );
+  return (
+    <PaperProvider>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+      </Stack>
+    </PaperProvider>
+  );
 }
