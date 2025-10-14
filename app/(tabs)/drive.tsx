@@ -10,6 +10,28 @@ import { Image, TouchableOpacity } from 'react-native';
 
 export default function MakeCarpool() {
     return (
+        <Card size='md' variant='elevated' className='my-2 p-3 bg-red-500'>
+            <View className='flex-row items-center'>
+                {/* Profielfoto */}
+                <Image
+                    source={{ uri: profileImage }}
+                    className='w-12 h-12 rounded-full mr-4'
+                />
+
+                {/* Info rechts */}
+                <View className='flex-1'>
+                    <Heading size='md'>
+                        {from} → {to}
+                    </Heading>
+                    <CustomText size='sm' className='mt-1'>
+                        {time}
+                    </CustomText>
+                </View>
+            </View>
+        </Card>
+    );
+}
+
 //         <View className='flex-1 p-4'>
 //             {/* Plus knop */}
 //             <TouchableOpacity className='w-10 h-10 rounded-lg bg-blue-600 justify-center items-center'>
@@ -57,27 +79,3 @@ export default function MakeCarpool() {
 //             </Table>
 // >>>>>>> 9d26359 (drive page changes)
 //         </View>
-
-function CarpoolCard({ profileImage, from, to, time }) {
-    return (
-        <Card size='md' variant='elevated' className='my-2 p-3 bg-red-500'>
-            <View className='flex-row items-center'>
-                {/* Profielfoto */}
-                <Image
-                    source={{ uri: profileImage }}
-                    className='w-12 h-12 rounded-full mr-4'
-                />
-
-                {/* Info rechts */}
-                <View className='flex-1'>
-                    <Heading size='md'>
-                        {from} → {to}
-                    </Heading>
-                    <CustomText size='sm' className='mt-1'>
-                        {time}
-                    </CustomText>
-                </View>
-            </View>
-        </Card>
-    );
-}
