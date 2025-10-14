@@ -1,26 +1,16 @@
 module.exports = (api) => {
   api.cache(true);
+  const plugins = [];
+
+  plugins.push('react-native-worklets/plugin');
 
   return {
-    presets: [['babel-preset-expo'], 'nativewind/babel'],
-      env: {
-        production: {
-          plugins: ['react-native-paper/babel'],
-      }
+    presets: ['babel-preset-expo'],
+    plugins,
+    env: {
+      production: {
+        plugins: ['react-native-paper/babel'],
+      },
     },
-    plugins: [
-      [
-        'module-resolver',
-        {
-          root: ['./'],
-
-          alias: {
-            '@': './',
-            'tailwind.config': './tailwind.config.js',
-          },
-        },
-      ],
-      'react-native-worklets/plugin',
-    ],
   };
 };
