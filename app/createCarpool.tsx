@@ -2,7 +2,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { SearchIcon } from 'lucide-react-native';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input, InputField, InputIcon, InputSlot } from '@/components/ui/input';
@@ -28,6 +27,11 @@ export default function CreateCarpool() {
   const showDatepicker = () => {
     showMode('date');
   };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
+
 
   const renderContent = () => {
     if (page === 1) {
@@ -67,9 +71,13 @@ export default function CreateCarpool() {
 
     if (page === 2) {
       return (
-        <SafeAreaView className='flex-1'>
+        <View className='flex-1'>
           <Button onPress={showDatepicker}>
-            <ButtonText>show time</ButtonText>
+            <ButtonText>show Date</ButtonText>
+          </Button>
+
+          <Button onPress={showTimepicker}>
+            <ButtonText>show Time</ButtonText>
           </Button>
           {show && (
             <DateTimePicker
@@ -80,7 +88,7 @@ export default function CreateCarpool() {
               onChange={onChange}
             />
           )}
-        </SafeAreaView>
+        </View>
       );
     }
 
