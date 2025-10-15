@@ -1,9 +1,10 @@
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
+import { ScrollView } from 'react-native-reanimated/lib/typescript/Animated';
 
 export default function ChatScreen() {
     return (
-        <View className='flex-1 justify-center items-center'>
+        <ScrollView>
             <Text className=''>Chat Screen</Text>
-        </View>
+        </ScrollView>
     );
 }
