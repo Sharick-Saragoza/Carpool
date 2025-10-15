@@ -20,7 +20,7 @@ export default function CreateCarpool() {
   const [date, setDate] = useState(new Date(1598051730000));
   const [show, setShow] = useState(false);
   const [mode, setMode] = useState('date');
-  const [seats, setSeats] = useState(0); // Changed to number type
+  const [seats, setSeats] = useState(1);
 
   const onChange = (event: any, selectedDate?: Date) => {
     const currentDate = selectedDate || date;
@@ -116,7 +116,7 @@ export default function CreateCarpool() {
               value={seats}
               onChange={handleSliderChange}
               step={1}
-              minValue={0}
+              minValue={1}
               maxValue={10}
             >
               <SliderTrack>
