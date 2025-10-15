@@ -1,6 +1,12 @@
 import { Redirect, Tabs } from 'expo-router';
-import { Car, CircleUser, Map as MapIcon, MessageCircle } from 'lucide-react-native';
+import {
+  Car,
+  CircleUser,
+  Map as MapIcon,
+  MessageCircle,
+} from 'lucide-react-native';
 import { View } from 'react-native';
+import { Icon } from '@/components/ui/icon';
 import { Spinner } from '@/components/ui/spinner';
 import { sessionContext } from '@/context/session-context';
 import { useAuth } from '@/context/useAuth';
@@ -39,14 +45,14 @@ export default function TabLayout() {
           name="explore"
           options={{
             title: 'Ritten',
-            tabBarIcon: ({ color }) => <MapIcon size={28} color={color} />,
+            tabBarIcon: ({ color }) => <Icon as={MapIcon} color={color} />,
           }}
         />
         <Tabs.Screen
           name="drive"
           options={{
             title: 'Rijden',
-            tabBarIcon: ({ color }) => <Car size={28} color={color} />,
+            tabBarIcon: ({ color }) => <Icon as={Car} color={color} />,
           }}
         />
         <Tabs.Screen
@@ -54,7 +60,7 @@ export default function TabLayout() {
           options={{
             title: 'Chat',
             tabBarIcon: ({ color }) => (
-              <MessageCircle size={28} color={color} />
+              <Icon as={MessageCircle} color={color} />
             ),
           }}
         />
@@ -62,9 +68,7 @@ export default function TabLayout() {
           name="profile"
           options={{
             title: 'Profiel',
-            tabBarIcon: ({ color }) => (
-              <CircleUser size={28} color={color} />
-            ),
+            tabBarIcon: ({ color }) => <Icon as={CircleUser} color={color} />,
           }}
         />
       </Tabs>
