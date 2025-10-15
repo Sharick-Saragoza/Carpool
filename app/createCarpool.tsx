@@ -14,15 +14,15 @@ export default function CreateCarpool() {
   const [show, setShow] = useState(false);
   const [mode, setMode] = useState('date');
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
+  const onChange = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || date;
     setShow(false);
     setDate(currentDate);
   };
 
-  const showMode = (currentMode) => {
+  const showMode = (currentMode: string) => {
     setShow(true);
-    setMode('date')
+    setMode(currentMode);
   };
 
   const showDatepicker = () => {
@@ -67,22 +67,20 @@ export default function CreateCarpool() {
 
     if (page === 2) {
       return (
-        <View className='flex-1'>
-          <SafeAreaView>
-            <Button onPress={showDatepicker}>
-              <ButtonText>show time</ButtonText>
-            </Button>
-            {show && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                mode={mode}
-                is24Hour={true}
-                onChange={onChange}
-              />
-            )}
-          </SafeAreaView>
-        </View>
+        <SafeAreaView className='flex-1'>
+          <Button onPress={showDatepicker}>
+            <ButtonText>show time</ButtonText>
+          </Button>
+          {show && (
+            <DateTimePicker
+              testID='dateTimePicker'
+              value={date}
+              mode={mode as any}
+              is24Hour={true}
+              onChange={onChange}
+            />
+          )}
+        </SafeAreaView>
       );
     }
 
@@ -103,19 +101,19 @@ export default function CreateCarpool() {
   };
 
   return (
-    <View className='flex-1'>
-      {renderContent()}
+      <View className='flex-1'>
+        {renderContent()}
 
-      <View className='bg-gray-400 p-4 flex flex-row gap-5'>
-        {page !== 1 && (
-          <Button className='flex-1' onPress={() => setPage(page - 1)}>
-            <ButtonText>Back</ButtonText>
+        <View className='bg-gray-400 p-4 flex flex-row gap-5'>
+          {page !== 1 && (
+            <Button className='flex-1' onPress={() => setPage(page - 1)}>
+              <ButtonText>Back</ButtonText>
+            </Button>
+          )}
+          <Button className='flex-1' onPress={() => setPage(page + 1)}>
+            <ButtonText>next</ButtonText>
           </Button>
-        )}
-        <Button className='flex-1' onPress={() => setPage(page + 1)}>
-          <ButtonText>next</ButtonText>
-        </Button>
+        </View>
       </View>
-    </View>
   );
 }
