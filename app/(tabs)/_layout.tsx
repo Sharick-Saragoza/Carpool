@@ -1,5 +1,5 @@
-import { Ionicons } from '@expo/vector-icons';
 import { Redirect, Tabs } from 'expo-router';
+import { Car, CircleUser, Map as MapIcon, MessageCircle } from 'lucide-react-native';
 import { View } from 'react-native';
 import { Spinner } from '@/components/ui/spinner';
 import { sessionContext } from '@/context/session-context';
@@ -39,18 +39,14 @@ export default function TabLayout() {
           name="explore"
           options={{
             title: 'Ritten',
-            tabBarIcon: ({ color }) => (
-              <Ionicons name="map" size={28} color={color} />
-            ),
+            tabBarIcon: ({ color }) => <MapIcon size={28} color={color} />,
           }}
         />
         <Tabs.Screen
           name="drive"
           options={{
             title: 'Rijden',
-            tabBarIcon: ({ color }) => (
-              <Ionicons name="car-sport" size={28} color={color} />
-            ),
+            tabBarIcon: ({ color }) => <Car size={28} color={color} />,
           }}
         />
         <Tabs.Screen
@@ -58,7 +54,7 @@ export default function TabLayout() {
           options={{
             title: 'Chat',
             tabBarIcon: ({ color }) => (
-              <Ionicons name="chatbubble" size={28} color={color} />
+              <MessageCircle size={28} color={color} />
             ),
           }}
         />
@@ -67,7 +63,7 @@ export default function TabLayout() {
           options={{
             title: 'Profiel',
             tabBarIcon: ({ color }) => (
-              <Ionicons name="person" size={28} color={color} />
+              <CircleUser size={28} color={color} />
             ),
           }}
         />
