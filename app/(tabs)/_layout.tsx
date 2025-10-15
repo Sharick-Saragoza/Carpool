@@ -33,8 +33,8 @@ export default function TabLayout() {
           tabBarStyle: {
             backgroundColor: '#9ca3af',
             height: 60,
-            paddingBottom: 12,
-            paddingTop: 12,
+            paddingBottom: 4,
+            paddingTop: 4,
           },
           tabBarActiveTintColor: '#000000',
           tabBarInactiveTintColor: '#6b7280',
@@ -45,14 +45,14 @@ export default function TabLayout() {
           name="explore"
           options={{
             title: 'Ritten',
-            tabBarIcon: ({ color }) => <Icon as={MapIcon} color={color} />,
+            tabBarIcon: ({ color }) => <Icon as={MapIcon} size={24} color={color} />,
           }}
         />
         <Tabs.Screen
           name="drive"
           options={{
             title: 'Rijden',
-            tabBarIcon: ({ color }) => <Icon as={Car} color={color} />,
+            tabBarIcon: ({ color }) => <Icon as={Car} size={24} color={color} />,
           }}
         />
         <Tabs.Screen
@@ -60,7 +60,7 @@ export default function TabLayout() {
           options={{
             title: 'Chat',
             tabBarIcon: ({ color }) => (
-              <Icon as={MessageCircle} color={color} />
+              <Icon as={MessageCircle} size={24} color={color} />
             ),
           }}
         />
@@ -68,7 +68,7 @@ export default function TabLayout() {
           name="profile"
           options={{
             title: 'Profiel',
-            tabBarIcon: ({ color }) => <Icon as={CircleUser} color={color} />,
+            tabBarIcon: ({ color }) => <Icon as={CircleUser} size={24} color={color} />,
           }}
         />
       </Tabs>
