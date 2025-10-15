@@ -1,4 +1,4 @@
-import { ScrollView } from 'react-native-reanimated/lib/typescript/Animated';
+import { ScrollView } from 'react-native';
 import Account from '@/components/Account';
 
 export default function ProfileScreen() {

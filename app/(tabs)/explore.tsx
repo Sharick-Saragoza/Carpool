@@ -1,10 +1,9 @@
-import { Text } from 'react-native';
-import { ScrollView } from 'react-native-reanimated/lib/typescript/Animated';
+import { ScrollView, Text } from 'react-native';
 
 export default function ExploreScreen() {
-    return (
-        <ScrollView>
-            <Text>Explore Screen</Text>
-        </ScrollView>
-    );
+  return (
+    <ScrollView>
+      <Text>Explore Screen</Text>
+    </ScrollView>
+  );
 }
