@@ -13,6 +13,7 @@ import {
   SliderTrack,
 } from '@/components/ui/slider';
 import { Text } from '@/components/ui/text';
+import { Textarea, TextareaInput } from '@/components/ui/textarea';
 import { View } from '@/components/ui/view';
 
 export default function CreateCarpool() {
@@ -140,15 +141,10 @@ export default function CreateCarpool() {
             </Box>
           </Card>
 
-          <Card className="min-h-[120px]">
-            <Input className="min-h-[120px]">
-              <InputField 
-              placeholder='Voer het volledige address in' 
-              multiline={true}
-              textAlignVertical='top'
-              className="min-h-[120px] py-3"
-              />
-            </Input>
+          <Card>
+            <Textarea>
+              <TextareaInput />
+            </Textarea>
           </Card>
         </View>
       );
