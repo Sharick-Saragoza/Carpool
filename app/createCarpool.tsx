@@ -17,7 +17,7 @@ import { View } from '@/components/ui/view';
 
 export default function CreateCarpool() {
   const [page, setPage] = useState<number>(1);
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [datetime, setDatetime] = useState(new Date());
   const [seats, setSeats] = useState(1);
   const [driveInfo, setDriveInfo] = useState<string>();
   const [location, setLocation] = useState();
@@ -28,15 +28,14 @@ export default function CreateCarpool() {
 
   const handleLocationData = (feature) => {
     const locationJson = JSON.stringify(feature)
-    
     setLocation(locationJson); 
     setIsResult(true)
   };
 
   const onChange = (_event: any, selectedDate?: Date) => {
-    const currentDate = selectedDate || date;
+    const currentDate = selectedDate || datetime;
     setShow(false);
-    setDate(currentDate);
+    setDatetime(currentDate);
   };
 
   const showMode = (currentMode: string) => {
@@ -50,6 +49,22 @@ export default function CreateCarpool() {
 
   const showTimepicker = () => {
     showMode('time');
+  };
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('nl-NL', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('nl-NL', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   const handleSliderChange = (value: number) => {
@@ -74,18 +89,27 @@ export default function CreateCarpool() {
 
     if (page === 2) {
       return (
-        <ScrollView className='flex-1'>
-          <Button onPress={showDatepicker}>
-            <ButtonText>show Date</ButtonText>
-          </Button>
+        <ScrollView className='flex-1 p-4'>
+          <Card className='p-4 mb-4'>
+            <Text className='text-lg font-semibold mb-2'>Selected Date & Time:</Text>
+            <Text className='text-base mb-1'>📅 {formatDate(datetime)}</Text>
+            <Text className='text-base'>⏰ {formatTime(datetime)}</Text>
+          </Card>
 
-          <Button onPress={showTimepicker}>
-            <ButtonText>show Time</ButtonText>
-          </Button>
+          <Box className='flex flex-row gap-3 mb-4'>
+            <Button variant='outline' className='flex-1' onPress={showDatepicker}>
+              <ButtonText>Change Date</ButtonText>
+            </Button>
+
+            <Button variant='outline' className='flex-1' onPress={showTimepicker}>
+              <ButtonText>Change Time</ButtonText>
+            </Button>
+          </Box>
+
           {show && (
             <DateTimePicker
               testID='dateTimePicker'
-              value={date}
+              value={datetime}
               mode={mode as any}
               is24Hour={true}
               onChange={onChange}
@@ -137,7 +161,6 @@ export default function CreateCarpool() {
                 placeholder='...'
                 value={driveInfo}
                 onChangeText={setDriveInfo}
-                onChange={() => console.log(driveInfo)}
               />
             </Textarea>
           </Card>
@@ -165,7 +188,7 @@ export default function CreateCarpool() {
             <ButtonText>Next</ButtonText>
           </Button>
         ) : (
-          <Button className='flex-1' onPress={() => console.log(location)}>
+          <Button className='flex-1' onPress={() => console.log(datetime)}>
             <ButtonText>Submit</ButtonText>
           </Button>
         )}
