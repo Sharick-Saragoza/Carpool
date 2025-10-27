@@ -5,7 +5,6 @@ import { AutoCompleteLocation } from '@/components/AutoCompleteLocation';
 import { Box } from '@/components/ui/box';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Grid, GridItem } from '@/components/ui/grid';
 import {
   Slider,
   SliderFilledTrack,
@@ -168,7 +167,9 @@ export default function CreateCarpool() {
               {PREFERENCES.map((pref) => (
                 <Button
                   key={pref.id}
-                  variant={selectedPreferences.includes(pref.id) ? 'solid' : 'outline'}
+                  variant={
+                    selectedPreferences.includes(pref.id) ? 'solid' : 'outline'
+                  }
                   className='min-w-[45%] flex-grow mb-2'
                   onPress={() => togglePreference(pref.id)}
                 >
@@ -183,7 +184,7 @@ export default function CreateCarpool() {
           <Card>
             <Textarea>
               <TextareaInput
-                placeholder='...'
+                placeholder='Voeg eventuele aanvullende informatie toe...'
                 value={driveInfo}
                 onChangeText={setDriveInfo}
               />
