@@ -79,11 +79,9 @@ export default function CreateCarpool() {
         setIsResult(true);
       }
       return (
-        <ScrollView>
-          <View>
+          <View className='flex-1'>
             <AutoCompleteLocation onSelect={handleLocationData} />
           </View>
-        </ScrollView>
       );
     }
 
@@ -188,7 +186,7 @@ export default function CreateCarpool() {
             <ButtonText>Next</ButtonText>
           </Button>
         ) : (
-          <Button className='flex-1' onPress={() => console.log(datetime)}>
+          <Button className='flex-1' onPress={() => console.log(location, datetime, seats, driveInfo)}>
             <ButtonText>Submit</ButtonText>
           </Button>
         )}
