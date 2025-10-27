@@ -1,7 +1,7 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
-import { AutoCompleteLocation }from '@/components/AutoCompleteLocation';
+import { AutoCompleteLocation } from '@/components/AutoCompleteLocation';
 import { Box } from '@/components/ui/box';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -20,11 +20,18 @@ export default function CreateCarpool() {
   const [date, setDate] = useState(new Date(1598051730000));
   const [seats, setSeats] = useState(1);
   const [driveInfo, setDriveInfo] = useState<string>();
-  const [location, setLocation] = useState()
-  const [isResult, setIsResult] = useState<boolean>(false)
+  const [location, setLocation] = useState();
+  const [isResult, setIsResult] = useState<boolean>(false);
 
   const [show, setShow] = useState(false);
   const [mode, setMode] = useState('date');
+
+  const handleLocationData = (feature) => {
+    const locationJson = JSON.stringify(feature)
+    
+    setLocation(locationJson); 
+    setIsResult(true)
+  };
 
   const onChange = (_event: any, selectedDate?: Date) => {
     const currentDate = selectedDate || date;
@@ -52,16 +59,14 @@ export default function CreateCarpool() {
   const renderContent = () => {
     if (page === 1) {
       if (location === undefined) {
-        setIsResult(false)
+        setIsResult(false);
       } else {
-        setIsResult(true)
+        setIsResult(true);
       }
       return (
         <ScrollView>
           <View>
-            <AutoCompleteLocation 
-              onSelect={(feature: PhotonFeature) => {setLocation(feature); setIsResult(true)}}
-            />
+            <AutoCompleteLocation onSelect={handleLocationData} />
           </View>
         </ScrollView>
       );
@@ -154,15 +159,13 @@ export default function CreateCarpool() {
         {page !== 3 ? (
           <Button
             disabled={!isResult}
-            className='flex-1' 
-            onPress={() => setPage(page + 1)}>
+            className='flex-1'
+            onPress={() => setPage(page + 1)}
+          >
             <ButtonText>Next</ButtonText>
           </Button>
         ) : (
-          <Button
-            className='flex-1'
-            onPress={() => console.log(location, )}
-          >
+          <Button className='flex-1' onPress={() => console.log(location)}>
             <ButtonText>Submit</ButtonText>
           </Button>
         )}
