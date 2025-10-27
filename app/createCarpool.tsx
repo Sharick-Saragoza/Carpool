@@ -1,11 +1,10 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { SearchIcon } from 'lucide-react-native';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
+import { AutoCompleteLocation }from '@/components/AutoCompleteLocation';
 import { Box } from '@/components/ui/box';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Input, InputField, InputIcon, InputSlot } from '@/components/ui/input';
 import {
   Slider,
   SliderFilledTrack,
@@ -19,11 +18,15 @@ import { View } from '@/components/ui/view';
 export default function CreateCarpool() {
   const [page, setPage] = useState<number>(1);
   const [date, setDate] = useState(new Date(1598051730000));
+  const [seats, setSeats] = useState(1);
+  const [driveInfo, setDriveInfo] = useState<string>();
+  const [location, setLocation] = useState()
+  const [isResult, setIsResult] = useState<boolean>(false)
+
   const [show, setShow] = useState(false);
   const [mode, setMode] = useState('date');
-  const [seats, setSeats] = useState(1);
 
-  const onChange = (event: any, selectedDate?: Date) => {
+  const onChange = (_event: any, selectedDate?: Date) => {
     const currentDate = selectedDate || date;
     setShow(false);
     setDate(currentDate);
@@ -48,35 +51,17 @@ export default function CreateCarpool() {
 
   const renderContent = () => {
     if (page === 1) {
+      if (location === undefined) {
+        setIsResult(false)
+      } else {
+        setIsResult(true)
+      }
       return (
         <ScrollView>
           <View>
-            <Card className='flex-1'>
-              <Input>
-                <InputSlot className='pl-3'>
-                  <InputIcon as={SearchIcon} />
-                </InputSlot>
-                <InputField placeholder='Voer het volledige address in' />
-              </Input>
-            </Card>
-
-            <Card>
-              <Input>
-                <InputSlot className='pl-3'>
-                  <InputIcon as={SearchIcon} />
-                </InputSlot>
-                <InputField placeholder='Voer het volledige address in' />
-              </Input>
-            </Card>
-
-            <Card>
-              <Input>
-                <InputSlot className='pl-3'>
-                  <InputIcon as={SearchIcon} />
-                </InputSlot>
-                <InputField placeholder='Voer het volledige address in' />
-              </Input>
-            </Card>
+            <AutoCompleteLocation 
+              onSelect={(feature: PhotonFeature) => {setLocation(feature); setIsResult(true)}}
+            />
           </View>
         </ScrollView>
       );
@@ -84,7 +69,7 @@ export default function CreateCarpool() {
 
     if (page === 2) {
       return (
-        <View className='flex-1'>
+        <ScrollView className='flex-1'>
           <Button onPress={showDatepicker}>
             <ButtonText>show Date</ButtonText>
           </Button>
@@ -101,13 +86,13 @@ export default function CreateCarpool() {
               onChange={onChange}
             />
           )}
-        </View>
+        </ScrollView>
       );
     }
 
     if (page === 3) {
       return (
-        <View className='flex-1 p-4'>
+        <ScrollView className='flex-1 p-4'>
           <Card className='p-4 mb-5'>
             <Text className='text-center text-lg font-semibold mb-4'>
               Aantal zitplaatsen: {seats}
@@ -143,10 +128,15 @@ export default function CreateCarpool() {
 
           <Card>
             <Textarea>
-              <TextareaInput />
+              <TextareaInput
+                placeholder='...'
+                value={driveInfo}
+                onChangeText={setDriveInfo}
+                onChange={() => console.log(driveInfo)}
+              />
             </Textarea>
           </Card>
-        </View>
+        </ScrollView>
       );
     }
   };
@@ -162,13 +152,16 @@ export default function CreateCarpool() {
           </Button>
         )}
         {page !== 3 ? (
-          <Button className='flex-1' onPress={() => setPage(page + 1)}>
+          <Button
+            disabled={!isResult}
+            className='flex-1' 
+            onPress={() => setPage(page + 1)}>
             <ButtonText>Next</ButtonText>
           </Button>
         ) : (
           <Button
             className='flex-1'
-            onPress={() => console.log('Submit', { seats })}
+            onPress={() => console.log(location, )}
           >
             <ButtonText>Submit</ButtonText>
           </Button>
