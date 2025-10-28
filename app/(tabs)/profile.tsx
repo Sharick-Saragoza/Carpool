@@ -1,10 +1,10 @@
-import { ScrollView } from 'react-native';
 import Account from '@/components/Account';
+import ScreenWrapper from '@/components/ScreenWrapper';
 
 export default function ProfileScreen() {
   return (
-    <ScrollView>
+    <ScreenWrapper>
       <Account />
-    </ScrollView>
+    </ScreenWrapper>
   );
 }

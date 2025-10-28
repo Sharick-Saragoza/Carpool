@@ -295,30 +295,30 @@ export default function CreateCarpool() {
   };
 
   return (
-    <View className='flex-1'>
-      {renderContent()}
+      <View className='flex-1'>
+        {renderContent()}
 
-      <View className='bg-gray-400 p-4 flex flex-row gap-5'>
-        {page !== 1 && (
-          <Button className='flex-1' onPress={() => setPage(page - 1)}>
-            <ButtonText>Terug</ButtonText>
-          </Button>
-        )}
-        {page !== 4 ? (
-          <Button
-            disabled={isNextDisabled()}
-            variant={isNextDisabled() ? 'outline' : 'solid'}
-            className='flex-1'
-            onPress={() => setPage(page + 1)}
-          >
-            <ButtonText>Volgende</ButtonText>
-          </Button>
-        ) : (
-          <Button className='flex-1' onPress={handleSubmit} disabled={loading}>
-            <ButtonText>{loading ? 'Creëren...' : 'Aanmaken'}</ButtonText>
-          </Button>
-        )}
+        <View className='bg-gray-400 p-4 flex flex-row gap-5'>
+          {page !== 1 && (
+            <Button className='flex-1' onPress={() => setPage(page - 1)}>
+              <ButtonText>Terug</ButtonText>
+            </Button>
+          )}
+          {page !== 4 ? (
+            <Button
+              disabled={isNextDisabled()}
+              variant={isNextDisabled() ? 'outline' : 'solid'}
+              className='flex-1'
+              onPress={() => setPage(page + 1)}
+            >
+              <ButtonText>Volgende</ButtonText>
+            </Button>
+          ) : (
+            <Button className='flex-1' onPress={handleSubmit} disabled={loading}>
+              <ButtonText>{loading ? 'Creëren...' : 'Aanmaken'}</ButtonText>
+            </Button>
+          )}
+        </View>
       </View>
-    </View>
   );
 }
