@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { useSession } from '@/context/session-context';
 import { getSupabaseClient } from '@/context/supabase';
-import { getRecord } from '@/libs/getRecord';
+import { getSingleRecord } from '@/libs/getSingleRecord';
 import { getUserCars } from '@/libs/getUserCars';
 import { saveCarData } from '@/libs/saveCarData';
 import { showError } from '@/libs/showError';
@@ -62,7 +62,7 @@ export default function Account() {
       }
 
       const [profile, car] = await Promise.all([
-        getRecord<Profile>('profiles', userId),
+        getSingleRecord<Profile>('profiles', userId),
         getUserCars(userId),
       ]);
 
