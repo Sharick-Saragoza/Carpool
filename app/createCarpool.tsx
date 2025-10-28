@@ -1,6 +1,6 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useState } from 'react';
-import { ScrollView } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Alert, ScrollView } from 'react-native';
 import { AutoCompleteLocation } from '@/components/AutoCompleteLocation';
 import { Box } from '@/components/ui/box';
 import { Button, ButtonText } from '@/components/ui/button';
@@ -14,9 +14,18 @@ import {
 import { Text } from '@/components/ui/text';
 import { Textarea, TextareaInput } from '@/components/ui/textarea';
 import { View } from '@/components/ui/view';
+import { useAuth } from '@/context/useAuth';
+import { getUserCars } from '@/libs/getUserCars';
 import { PREFERENCES } from '@/libs/ridePrefences';
+import { showError } from '@/libs/showError';
+import { updateRecord } from '@/libs/updateRecord';
 
 export default function CreateCarpool() {
+  const { session } = useAuth();
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const devMode = process.env.EXPO_PUBLIC_DEV_MODE === 'true';
+
   const [page, setPage] = useState<number>(1);
   const [datetime, setDatetime] = useState(new Date());
   const [seats, setSeats] = useState(1);
@@ -27,6 +36,10 @@ export default function CreateCarpool() {
 
   const [show, setShow] = useState(false);
   const [mode, setMode] = useState('date');
+
+  useEffect(() => {
+    setIsResult(location !== undefined);
+  }, [location]);
 
   const handleLocationData = (feature) => {
     const locationJson = JSON.stringify(feature);
@@ -81,13 +94,53 @@ export default function CreateCarpool() {
     setSeats(value);
   };
 
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+
+      if (devMode) {
+        console.log('[DEV MODE] Carpool created:', {
+          location,
+          datetime,
+          seats,
+          driveInfo,
+          selectedPreferences: JSON.stringify(selectedPreferences),
+        });
+        Alert.alert('Carpool created! (dev mode)');
+        return;
+      }
+      const userId = session?.user.id;
+
+      const car = await getUserCars(userId);
+      const carId = car.id
+
+      await updateRecord({
+        session,
+        table: 'rides',
+        data: {
+          created_at: new Date(),
+          driver_id: session?.user?.id,
+          car_id: carId,
+          start_location: location,
+          end_location: location,
+          date: datetime,
+          seats_available: seats,
+          updated_at: new Date(),
+          preferences: JSON.stringify(selectedPreferences),
+          ride_info: driveInfo,
+        },
+      });
+
+      Alert.alert('Carpool created successfully!');
+    } catch (error) {
+      showError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const renderContent = () => {
     if (page === 1) {
-      if (location === undefined) {
-        setIsResult(false);
-      } else {
-        setIsResult(true);
-      }
       return (
         <View className='flex-1'>
           <AutoCompleteLocation onSelect={handleLocationData} />
@@ -216,17 +269,10 @@ export default function CreateCarpool() {
         ) : (
           <Button
             className='flex-1'
-            onPress={() =>
-              console.log(
-                location,
-                datetime,
-                seats,
-                driveInfo,
-                selectedPreferences,
-              )
-            }
+            onPress={handleSubmit}
+            disabled={loading} // Add loading state to button
           >
-            <ButtonText>Submit</ButtonText>
+            <ButtonText>{loading ? 'Creating...' : 'Submit'}</ButtonText>
           </Button>
         )}
       </View>
