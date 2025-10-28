@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/slider';
 import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
+import ScreenWrapper from '@/components/ScreenWrapper';
 
 export default function CreateCarpool() {
   const [page, setPage] = useState<number>(1);
@@ -48,136 +49,140 @@ export default function CreateCarpool() {
   const renderContent = () => {
     if (page === 1) {
       return (
-        <ScrollView>
-          <View>
-            <Card className='flex-1'>
-              <Input>
-                <InputSlot className='pl-3'>
-                  <InputIcon as={SearchIcon} />
-                </InputSlot>
-                <InputField placeholder='Voer het volledige address in' />
-              </Input>
-            </Card>
+        <ScreenWrapper>
+          <Card className='flex-1'>
+            <Input>
+              <InputSlot className='pl-3'>
+                <InputIcon as={SearchIcon} />
+              </InputSlot>
+              <InputField placeholder='Voer het volledige address in' />
+            </Input>
+          </Card>
 
-            <Card>
-              <Input>
-                <InputSlot className='pl-3'>
-                  <InputIcon as={SearchIcon} />
-                </InputSlot>
-                <InputField placeholder='Voer het volledige address in' />
-              </Input>
-            </Card>
+          <Card>
+            <Input>
+              <InputSlot className='pl-3'>
+                <InputIcon as={SearchIcon} />
+              </InputSlot>
+              <InputField placeholder='Voer het volledige address in' />
+            </Input>
+          </Card>
 
-            <Card>
-              <Input>
-                <InputSlot className='pl-3'>
-                  <InputIcon as={SearchIcon} />
-                </InputSlot>
-                <InputField placeholder='Voer het volledige address in' />
-              </Input>
-            </Card>
-          </View>
-        </ScrollView>
+          <Card>
+            <Input>
+              <InputSlot className='pl-3'>
+                <InputIcon as={SearchIcon} />
+              </InputSlot>
+              <InputField placeholder='Voer het volledige address in' />
+            </Input>
+          </Card>
+        </ScreenWrapper>
       );
     }
 
     if (page === 2) {
       return (
-        <View className='flex-1'>
-          <Button onPress={showDatepicker}>
-            <ButtonText>show Date</ButtonText>
-          </Button>
+        <ScreenWrapper>
+          <View className='flex-1'>
+            <Button onPress={showDatepicker}>
+              <ButtonText>show Date</ButtonText>
+            </Button>
 
-          <Button onPress={showTimepicker}>
-            <ButtonText>show Time</ButtonText>
-          </Button>
-          {show && (
-            <DateTimePicker
-              testID='dateTimePicker'
-              value={date}
-              mode={mode as any}
-              is24Hour={true}
-              onChange={onChange}
-            />
-          )}
-        </View>
+            <Button onPress={showTimepicker}>
+              <ButtonText>show Time</ButtonText>
+            </Button>
+            {show && (
+              <DateTimePicker
+                testID='dateTimePicker'
+                value={date}
+                mode={mode as any}
+                is24Hour={true}
+                onChange={onChange}
+              />
+            )}
+          </View>
+        </ScreenWrapper>
       );
     }
 
     if (page === 3) {
       return (
+        <ScreenWrapper>
         <View className='flex-1 p-4'>
-          <Card className='p-4 mb-5'>
-            <Text className='text-center text-lg font-semibold mb-4'>
-              Aantal zitplaatsen: {seats}
-            </Text>
-            <Slider
-              defaultValue={0}
-              value={seats}
-              onChange={handleSliderChange}
-              step={1}
-              minValue={1}
-              maxValue={10}
-            >
-              <SliderTrack>
-                <SliderFilledTrack />
-              </SliderTrack>
-              <SliderThumb />
-            </Slider>
-          </Card>
+            <Card className='p-4 mb-5'>
+              <Text className='text-center text-lg font-semibold mb-4'>
+                Aantal zitplaatsen: {seats}
+              </Text>
+              <Slider
+                defaultValue={0}
+                value={seats}
+                onChange={handleSliderChange}
+                step={1}
+                minValue={1}
+                maxValue={10}
+              >
+                <SliderTrack>
+                  <SliderFilledTrack />
+                </SliderTrack>
+                <SliderThumb />
+              </Slider>
+            </Card>
 
-          <Card className='mb-5'>
-            <Text className='text-center text-lg font-semibold mb-4'>
-              Voorkeuren
-            </Text>
-            <Box className='flex flex-row'>
-              <Button variant='outline' className='flex-1'>
-                <ButtonText>test</ButtonText>
-              </Button>
-              <Button variant='outline' className='flex-1'>
-                <ButtonText>test</ButtonText>
-              </Button>
-            </Box>
-          </Card>
+            <Card className='mb-5'>
+              <Text className='text-center text-lg font-semibold mb-4'>
+                Voorkeuren
+              </Text>
+              <Box className='flex flex-row'>
+                <Button variant='outline' className='flex-1'>
+                  <ButtonText>test</ButtonText>
+                </Button>
+                <Button variant='outline' className='flex-1'>
+                  <ButtonText>test</ButtonText>
+                </Button>
+              </Box>
+            </Card>
 
-          <Card className="min-h-[120px]">
-            <Input className="min-h-[120px]">
-              <InputField 
-              placeholder='Voer het volledige address in' 
-              multiline={true}
-              textAlignVertical='top'
-              className="min-h-[120px] py-3"
-              />
-            </Input>
-          </Card>
-        </View>
+            <Card className="min-h-[120px]">
+              <Input className="min-h-[120px]">
+                <InputField 
+                placeholder='Voer het volledige address in' 
+                multiline={true}
+                textAlignVertical='top'
+                className="min-h-[120px] py-3"
+                />
+              </Input>
+            </Card>
+          </View>
+        </ScreenWrapper>
       );
     }
   };
 
   return (
-    <View className='flex-1'>
-      {renderContent()}
+    <ScreenWrapper>
+      <View className='flex-1'>
+        {renderContent()}
 
-      <View className='bg-gray-400 p-4 flex flex-row gap-5'>
-        {page !== 1 && (
-          <Button className='flex-1' onPress={() => setPage(page - 1)}>
-            <ButtonText>Back</ButtonText>
-          </Button>
-        )}
-        {page !== 3 ? (
-          <Button className='flex-1' onPress={() => setPage(page + 1)}>
-            <ButtonText>Next</ButtonText>
-          </Button>
-        ) : (
-          <Button
-            className='flex-1'
-            onPress={() => console.log('Submit', { seats })}
-          >
-            <ButtonText>Submit</ButtonText>
-          </Button>
-        )}
+        <View className='bg-gray-400 p-4 flex flex-row gap-5'>
+          {page !== 1 && (
+            <Button className='flex-1' onPress={() => setPage(page - 1)}>
+              <ButtonText>Back</ButtonText>
+            </Button>
+          )}
+          {page !== 3 ? (
+            <Button className='flex-1' onPress={() => setPage(page + 1)}>
+              <ButtonText>Next</ButtonText>
+            </Button>
+          ) : (
+            <Button
+              className='flex-1'
+              onPress={() => console.log('Submit', { seats })}
+            >
+              <ButtonText>Submit</ButtonText>
+            </Button>
+          )}
+        </View>
       </View>
-    </View>
+    </ScreenWrapper>
   );
 }
