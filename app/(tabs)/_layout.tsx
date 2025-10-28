@@ -16,7 +16,7 @@ export default function TabLayout() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center">
+      <View className="flex-1 justify-center items-center ">
         <Spinner />
       </View>
     );
@@ -32,7 +32,7 @@ export default function TabLayout() {
         screenOptions={{
           tabBarStyle: {
             backgroundColor: '#9ca3af',
-            height: 60,
+            height: 80,
             paddingBottom: 4,
             paddingTop: 4,
           },

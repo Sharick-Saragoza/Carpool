@@ -2,16 +2,22 @@ import { router } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { CarpoolCard } from '@/components/CarpoolCard';
 import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Popover, PopoverArrow, PopoverBackdrop, PopoverBody, PopoverContent } from '@/components/ui/popover';
+import {
+  Popover,
+  PopoverArrow,
+  PopoverBackdrop,
+  PopoverBody,
+  PopoverContent,
+} from '@/components/ui/popover';
 import { Spinner } from '@/components/ui/spinner';
 import { Text } from '@/components/ui/text';
 import { useSession } from '@/context/session-context';
 import { getUserCars } from '@/libs/getUserCars';
 import { getUserRides } from '@/libs/getUserRides';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function drive() {
   const session = useSession();
@@ -60,7 +66,7 @@ export default function drive() {
   const handleOpen = () => {
     setIsOpen(true);
   };
-  
+
   const handleClose = () => {
     setIsOpen(false);
   };
@@ -79,7 +85,7 @@ export default function drive() {
     if (hasCar) {
       router.push('/createCarpool');
     } else {
-      handleOpen(); 
+      handleOpen();
     }
   };
 
@@ -112,8 +118,8 @@ export default function drive() {
                 <ButtonText>Maak een Carpool aan</ButtonText>
               </Button>
             ) : (
-              <Popover 
-                isOpen={isOpen} 
+              <Popover
+                isOpen={isOpen}
                 onClose={handleClose}
                 onOpen={handleOpen}
                 placement='bottom'
@@ -124,15 +130,16 @@ export default function drive() {
                       <ButtonIcon as={Plus} />
                       <ButtonText>Maak een Carpool aan</ButtonText>
                     </Button>
-                  )
+                  );
                 }}
               >
                 <PopoverBackdrop />
                 <PopoverContent>
                   <PopoverArrow />
                   <PopoverBody>
-                    <Text className="text-typography-900">
-                      Je moet eerst een auto toevoegen voordat je een carpool kunt aanmaken.
+                    <Text className='text-typography-900'>
+                      Je moet eerst een auto toevoegen voordat je een carpool
+                      kunt aanmaken.
                     </Text>
                   </PopoverBody>
                 </PopoverContent>

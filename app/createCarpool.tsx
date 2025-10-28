@@ -22,6 +22,7 @@ import { PREFERENCES } from '@/libs/ridePrefences';
 import { showError } from '@/libs/showError';
 import { updateRecord } from '@/libs/updateRecord';
 
+
 export default function CreateCarpool() {
   const { session } = useAuth();
 
@@ -39,8 +40,12 @@ export default function CreateCarpool() {
   const [show, setShow] = useState(false);
   const [mode, setMode] = useState('date');
 
-  const handleLocationData = (setter: React.Dispatch<React.SetStateAction<string>>, feature: any) => {
-    const { country, state, city, postcode, name, street, housenumber } = feature;
+  const handleLocationData = (
+    setter: React.Dispatch<React.SetStateAction<string>>,
+    feature: any,
+  ) => {
+    const { country, state, city, postcode, name, street, housenumber } =
+      feature;
 
     const locationData = {
       country,
@@ -109,7 +114,6 @@ export default function CreateCarpool() {
     return false;
   };
 
-
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -161,26 +165,32 @@ export default function CreateCarpool() {
       return (
         <View className='flex-1 items-center'>
           <View className='flex items-center pt-2'>
-            <Heading size='xl' className='pb-2'>Waar vertrek je?</Heading>
+            <Heading size='xl' className='pb-2'>
+              Waar vertrek je?
+            </Heading>
             <Text>Dit is de plek waar je de passagiers ophaalt</Text>
           </View>
-            <AutoCompleteLocation
-              value={startLocation ? JSON.parse(startLocation).displayName : ''}
-              onSelect={(feature) => handleLocationData(setStartLocation, feature)}
-            />
-          </View>
+          <AutoCompleteLocation
+            value={startLocation ? JSON.parse(startLocation).displayName : ''}
+            onSelect={(feature) =>
+              handleLocationData(setStartLocation, feature)
+            }
+          />
+        </View>
       );
     }
 
     if (page === 2) {
       return (
         <View className='flex-1 items-center'>
-            <Heading size='xl' className='pt-2'>Waar ga je naar toe?</Heading>
-              <AutoCompleteLocation
-                value={endLocation ? JSON.parse(endLocation).displayName : ''}
-                onSelect={(feature) => handleLocationData(setEndLocation, feature)}
-              />
-          </View>
+          <Heading size='xl' className='pt-2'>
+            Waar ga je naar toe?
+          </Heading>
+          <AutoCompleteLocation
+            value={endLocation ? JSON.parse(endLocation).displayName : ''}
+            onSelect={(feature) => handleLocationData(setEndLocation, feature)}
+          />
+        </View>
       );
     }
 
@@ -188,19 +198,18 @@ export default function CreateCarpool() {
       return (
         <View className='flex-1 p-4'>
           <View className='pb-10'>
-              <Heading size='xl' className='text-center'>
-                Waneer vertrek je?
-              </Heading>
+            <Heading size='xl' className='text-center'>
+              Waneer vertrek je?
+            </Heading>
             <Card className='p-4 mb-4 text-center justify-center items-center'>
-              <Text size='lg' bold>{formatDate(datetime)}</Text>
+              <Text size='lg' bold>
+                {formatDate(datetime)}
+              </Text>
             </Card>
 
-            <Button
-              variant='outline'
-              onPress={showDatepicker}
-            >
+            <Button variant='outline' onPress={showDatepicker}>
               <ButtonText>📅 Verander Datum</ButtonText>
-            </Button> 
+            </Button>
           </View>
 
           <View>
@@ -213,13 +222,9 @@ export default function CreateCarpool() {
               </Text>
             </Card>
 
-            <Button
-              variant='outline'
-              onPress={showTimepicker}
-            >
+            <Button variant='outline' onPress={showTimepicker}>
               <ButtonText>⏰ Verander Tijd</ButtonText>
             </Button>
-
           </View>
 
           {show && (
@@ -239,9 +244,9 @@ export default function CreateCarpool() {
       return (
         <ScrollView className='flex-1 p-4'>
           <Card className='p-4 mb-5'>
-          <Heading size='xl' className='text-center mb-4'>
-            Aantal zitplaatsen: {seats}
-          </Heading>
+            <Heading size='xl' className='text-center mb-4'>
+              Aantal zitplaatsen: {seats}
+            </Heading>
             <Slider
               size='lg'
               defaultValue={1}
@@ -259,9 +264,9 @@ export default function CreateCarpool() {
           </Card>
 
           <Card className='mb-5'>
-          <Heading className='text-center text-lg font-semibold mb-4'>
-            Voorkeuren
-          </Heading>
+            <Heading className='text-center text-lg font-semibold mb-4'>
+              Voorkeuren
+            </Heading>
             <Box className='flex flex-row flex-wrap items-stretch gap-2'>
               {PREFERENCES.map((pref) => (
                 <Button
@@ -295,30 +300,30 @@ export default function CreateCarpool() {
   };
 
   return (
-      <View className='flex-1'>
-        {renderContent()}
+    <View className='flex-1'>
+      {renderContent()}
 
-        <View className='bg-gray-400 p-4 flex flex-row gap-5'>
-          {page !== 1 && (
-            <Button className='flex-1' onPress={() => setPage(page - 1)}>
-              <ButtonText>Terug</ButtonText>
-            </Button>
-          )}
-          {page !== 4 ? (
-            <Button
-              disabled={isNextDisabled()}
-              variant={isNextDisabled() ? 'outline' : 'solid'}
-              className='flex-1'
-              onPress={() => setPage(page + 1)}
-            >
-              <ButtonText>Volgende</ButtonText>
-            </Button>
-          ) : (
-            <Button className='flex-1' onPress={handleSubmit} disabled={loading}>
-              <ButtonText>{loading ? 'Creëren...' : 'Aanmaken'}</ButtonText>
-            </Button>
-          )}
-        </View>
+      <View className='bg-gray-400 p-4 flex flex-row gap-5'>
+        {page !== 1 && (
+          <Button className='flex-1' onPress={() => setPage(page - 1)}>
+            <ButtonText>Terug</ButtonText>
+          </Button>
+        )}
+        {page !== 4 ? (
+          <Button
+            disabled={isNextDisabled()}
+            variant={isNextDisabled() ? 'outline' : 'solid'}
+            className='flex-1'
+            onPress={() => setPage(page + 1)}
+          >
+            <ButtonText>Volgende</ButtonText>
+          </Button>
+        ) : (
+          <Button className='flex-1' onPress={handleSubmit} disabled={loading}>
+            <ButtonText>{loading ? 'Creëren...' : 'Aanmaken'}</ButtonText>
+          </Button>
+        )}
       </View>
+    </View>
   );
 }
