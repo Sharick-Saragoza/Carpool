@@ -43,8 +43,22 @@ export default function CreateCarpool() {
   }, [location]);
 
   const handleLocationData = (feature) => {
-    const locationJson = JSON.stringify(feature);
-    setLocation(locationJson);
+    const { country, state, city, postcode, name, street, housenumber } = feature;
+
+    const locationData = {
+      country,
+      state,
+      city,
+      postcode,
+      name,
+      street,
+      housenumber,
+      displayName: [name || street, housenumber].filter(Boolean).join(', '),
+    };
+    console.log(feature)
+    console.log(JSON.stringify(locationData))
+
+    setLocation(JSON.stringify(locationData));
     setIsResult(true);
   };
 
@@ -144,8 +158,11 @@ export default function CreateCarpool() {
   const renderContent = () => {
     if (page === 1) {
       return (
-        <View className='flex-1'>
-          <AutoCompleteLocation onSelect={handleLocationData} />
+        <View className='flex-1 p-4'>
+            <AutoCompleteLocation
+              value={location ? JSON.parse(location).displayName : ''}
+              onSelect={handleLocationData} 
+              />
         </View>
       );
     }
@@ -263,6 +280,7 @@ export default function CreateCarpool() {
         {page !== 3 ? (
           <Button
             disabled={!isResult}
+            variant={!isResult ? 'outline' : 'solid'}
             className='flex-1'
             onPress={() => setPage(page + 1)}
           >

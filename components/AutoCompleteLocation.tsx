@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Card } from './ui/card';
 import { Input, InputField, InputIcon, InputSlot } from './ui/input';
 
 interface PhotonFeature {
@@ -32,6 +33,7 @@ interface AutoCompleteLocationProps {
   minChars?: number;
   limit?: number;
   onSelect: (feature: PhotonFeature) => void;
+  value: string;
 }
 
 export const AutoCompleteLocation: React.FC<AutoCompleteLocationProps> = ({
@@ -39,6 +41,7 @@ export const AutoCompleteLocation: React.FC<AutoCompleteLocationProps> = ({
   minChars = 2,
   limit = 6,
   onSelect,
+  value,
 }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<PhotonFeature[]>([]);
@@ -49,6 +52,12 @@ export const AutoCompleteLocation: React.FC<AutoCompleteLocationProps> = ({
   const abortRef = useRef<AbortController | null>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const skipNextFetchRef = useRef(false);
+
+    useEffect(() => {
+      if (value && value !== query) {
+        setQuery(value);
+      }
+    }, [value]);
 
   useEffect(() => {
     if (skipNextFetchRef.current) {
@@ -166,7 +175,7 @@ export const AutoCompleteLocation: React.FC<AutoCompleteLocationProps> = ({
 
   return (
     <View className='w-full max-w-md self-center'>
-      <View className='relative'>
+      <Card className='relative'>
         <Input onFocus={() => results.length > 0 && setOpen(true)}>
           <InputSlot className='pl-3'>
             <InputIcon as={SearchIcon} />
@@ -180,7 +189,7 @@ export const AutoCompleteLocation: React.FC<AutoCompleteLocationProps> = ({
         {loading && (
           <ActivityIndicator className='absolute right-3 top-3' size='small' />
         )}
-      </View>
+      </Card>
 
       {open && results.length > 0 && (
         <View className='mt-2 rounded-lg border border-gray-200 bg-white max-h-64'>
