@@ -1,4 +1,5 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, ScrollView } from 'react-native';
 import { AutoCompleteLocation } from '@/components/AutoCompleteLocation';
@@ -112,7 +113,7 @@ export default function CreateCarpool() {
       const userId = session?.user.id;
 
       const car = await getUserCars(userId);
-      const carId = car.id
+      const carId = car.id;
 
       await updateRecord({
         session,
@@ -136,6 +137,7 @@ export default function CreateCarpool() {
       showError(error);
     } finally {
       setLoading(false);
+      router.push('/explore');
     }
   };
 
@@ -267,11 +269,7 @@ export default function CreateCarpool() {
             <ButtonText>Next</ButtonText>
           </Button>
         ) : (
-          <Button
-            className='flex-1'
-            onPress={handleSubmit}
-            disabled={loading} // Add loading state to button
-          >
+          <Button className='flex-1' onPress={handleSubmit} disabled={loading}>
             <ButtonText>{loading ? 'Creating...' : 'Submit'}</ButtonText>
           </Button>
         )}
