@@ -186,11 +186,11 @@ export default function CreateCarpool() {
 
     if (page === 3) {
       return (
-        <ScrollView className='flex-1 p-4'>
+        <View className='flex-1 p-4'>
           <View className='pb-10'>
-            <Heading size='xl' className=''>
-              Waneer vertrek je?
-            </Heading>
+              <Heading size='xl' className='text-center'>
+                Waneer vertrek je?
+              </Heading>
             <Card className='p-4 mb-4 text-center justify-center items-center'>
               <Text size='lg' bold>{formatDate(datetime)}</Text>
             </Card>
@@ -203,21 +203,24 @@ export default function CreateCarpool() {
             </Button> 
           </View>
 
-          <Heading size='xl' className=''>
-            Hoelaat vertrek je?
-          </Heading>
-          <Card className='p-4 mb-4 flex text-center justify-center items-center'>
-            <Text size='lg' bold>
-              {formatTime(datetime)}
-            </Text>
-           </Card>
+          <View>
+            <Heading size='xl' className='text-center'>
+              Hoelaat Vertrek je?
+            </Heading>
+            <Card className='p-4 mb-4 flex text-center justify-center items-center'>
+              <Text size='lg' bold>
+                {formatTime(datetime)}
+              </Text>
+            </Card>
 
-          <Button
-            variant='outline'
-            onPress={showTimepicker}
-          >
-            <ButtonText>⏰ Verander Tijd</ButtonText>
-          </Button>
+            <Button
+              variant='outline'
+              onPress={showTimepicker}
+            >
+              <ButtonText>⏰ Verander Tijd</ButtonText>
+            </Button>
+
+          </View>
 
           {show && (
             <DateTimePicker
@@ -228,7 +231,7 @@ export default function CreateCarpool() {
               onChange={onChange}
             />
           )}
-        </ScrollView>
+        </View>
       );
     }
 
@@ -236,11 +239,12 @@ export default function CreateCarpool() {
       return (
         <ScrollView className='flex-1 p-4'>
           <Card className='p-4 mb-5'>
-            <Text className='text-center text-lg font-semibold mb-4'>
-              Aantal zitplaatsen: {seats}
-            </Text>
+          <Heading size='xl' className='text-center mb-4'>
+            Aantal zitplaatsen: {seats}
+          </Heading>
             <Slider
-              defaultValue={0}
+              size='lg'
+              defaultValue={1}
               value={seats}
               onChange={handleSliderChange}
               step={1}
@@ -255,9 +259,9 @@ export default function CreateCarpool() {
           </Card>
 
           <Card className='mb-5'>
-            <Text className='text-center text-lg font-semibold mb-4'>
-              Voorkeuren
-            </Text>
+          <Heading className='text-center text-lg font-semibold mb-4'>
+            Voorkeuren
+          </Heading>
             <Box className='flex flex-row flex-wrap items-stretch gap-2'>
               {PREFERENCES.map((pref) => (
                 <Button

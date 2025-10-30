@@ -51,9 +51,14 @@ export default function drive() {
   useEffect(() => {
     fetchRidesData();
   }, []);
-  
+
   const handleCreateCarpool = () => {
     router.push('/createCarpool');
+  };
+
+  const formatRideDate = (isoString: string) => {
+    const date = new Date(isoString);
+    return `${date.toLocaleDateString('nl-NL', { weekday: 'long', month: 'long', day: 'numeric' })} ${date.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}`;
   };
 
   return (
@@ -75,7 +80,7 @@ export default function drive() {
           {rides.map((ride) => (
               <CarpoolCard
                 key={ride.id}
-                time={ride.dateTime}
+                time={formatRideDate(ride.dateTime)}
                 startLocation={ride.fromLocation}
                 endLocation={ride.toLocation}
                 avatar={ride.avatarUrl}
