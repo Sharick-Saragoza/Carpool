@@ -37,7 +37,7 @@ interface AutoCompleteLocationProps {
 }
 
 export const AutoCompleteLocation: React.FC<AutoCompleteLocationProps> = ({
-  placeholder = 'Search for a place...',
+  placeholder = 'Voer het volledige adress in',
   minChars = 2,
   limit = 6,
   onSelect,
@@ -190,7 +190,7 @@ export const AutoCompleteLocation: React.FC<AutoCompleteLocationProps> = ({
         )}
 
         {open && results.length > 0 && (
-          <View className="absolute top-full left-0 right-0 mt-1 rounded-lg border border-gray-200 bg-white max-h-64 z-50 p-6">
+          <View>
             <FlatList
               keyboardShouldPersistTaps="handled"
               data={results}
