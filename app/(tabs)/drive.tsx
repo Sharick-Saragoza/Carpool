@@ -2,7 +2,6 @@ import { router } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { CarpoolCard } from '@/components/CarpoolCard';
 import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -12,6 +11,7 @@ import { Text } from '@/components/ui/text';
 import { useSession } from '@/context/session-context';
 import { getUserCars } from '@/libs/getUserCars';
 import { getUserRides } from '@/libs/getUserRides';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function drive() {
   const session = useSession();
@@ -52,6 +52,10 @@ export default function drive() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchRidesData();
+  }, []);
 
   const handleOpen = () => {
     setIsOpen(true);
