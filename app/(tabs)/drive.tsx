@@ -2,7 +2,6 @@ import { router } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { CarpoolCard } from '@/components/CarpoolCard';
 import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
