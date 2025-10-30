@@ -209,7 +209,6 @@ export default function Auth() {
           size='md'
           action='primary'
         >
-          {loading && <ButtonSpinner color='gray' />}
           <ButtonText>{isSignUp ? 'Terug naar Login' : 'Aanmelden'}</ButtonText>
         </Button>
 
