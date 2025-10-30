@@ -291,7 +291,7 @@ export default function CreateCarpool() {
       <View className='bg-gray-400 p-4 flex flex-row gap-5'>
         {page !== 1 && (
           <Button className='flex-1' onPress={() => setPage(page - 1)}>
-            <ButtonText>Back</ButtonText>
+            <ButtonText>Terug</ButtonText>
           </Button>
         )}
         {page !== 4 ? (
@@ -301,11 +301,11 @@ export default function CreateCarpool() {
             className='flex-1'
             onPress={() => setPage(page + 1)}
           >
-            <ButtonText>Next</ButtonText>
+            <ButtonText>Volgende</ButtonText>
           </Button>
         ) : (
           <Button className='flex-1' onPress={handleSubmit} disabled={loading}>
-            <ButtonText>{loading ? 'Creating...' : 'Submit'}</ButtonText>
+            <ButtonText>{loading ? 'Creëren...' : 'Aanmaken'}</ButtonText>
           </Button>
         )}
       </View>
