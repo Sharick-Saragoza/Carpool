@@ -187,31 +187,37 @@ export default function CreateCarpool() {
     if (page === 3) {
       return (
         <ScrollView className='flex-1 p-4'>
-          <Card className='p-4 mb-4'>
-            <Text className='text-lg font-semibold mb-2'>
-              Selected Date & Time:
-            </Text>
-            <Text className='text-base mb-1'>📅 {formatDate(datetime)}</Text>
-            <Text className='text-base'>⏰ {formatTime(datetime)}</Text>
-          </Card>
+          <View className='pb-10'>
+            <Heading size='xl' className=''>
+              Waneer vertrek je?
+            </Heading>
+            <Card className='p-4 mb-4 text-center justify-center items-center'>
+              <Text size='lg' bold>{formatDate(datetime)}</Text>
+            </Card>
 
-          <Box className='flex flex-row gap-3 mb-4'>
             <Button
               variant='outline'
-              className='flex-1'
               onPress={showDatepicker}
             >
-              <ButtonText>Change Date</ButtonText>
-            </Button>
+              <ButtonText>📅 Verander Datum</ButtonText>
+            </Button> 
+          </View>
 
-            <Button
-              variant='outline'
-              className='flex-1'
-              onPress={showTimepicker}
-            >
-              <ButtonText>Change Time</ButtonText>
-            </Button>
-          </Box>
+          <Heading size='xl' className=''>
+            Hoelaat vertrek je?
+          </Heading>
+          <Card className='p-4 mb-4 flex text-center justify-center items-center'>
+            <Text size='lg' bold>
+              {formatTime(datetime)}
+            </Text>
+           </Card>
+
+          <Button
+            variant='outline'
+            onPress={showTimepicker}
+          >
+            <ButtonText>⏰ Verander Tijd</ButtonText>
+          </Button>
 
           {show && (
             <DateTimePicker
