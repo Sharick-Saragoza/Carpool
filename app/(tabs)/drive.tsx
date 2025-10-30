@@ -9,7 +9,7 @@ import { Text } from '@/components/ui/text';
 import { useSession } from '@/context/session-context';
 import { getUserRides } from '@/libs/getUserRides';
 
-export default function MakeCarpool() {
+export default function drive() {
   const session = useSession();
   const userId = session.user.id;
 
@@ -36,7 +36,6 @@ export default function MakeCarpool() {
         });
 
         setRides(processedRides);
-        console.log(processedRides)
       } else {
         setRides([]);
       }
@@ -62,7 +61,7 @@ export default function MakeCarpool() {
 
   return (
     <View className='flex-1'>
-      <View className='flex-1 m-3 bg-gray-400 p-0'>
+      <View className='flex-1 m-3 bg-gray-400 p-0 rounded'>
         <Card className='bg-gray-500 m-0'>
           <Button size='lg' onPress={handleCreateCarpool}>
             <ButtonIcon as={Plus} />
