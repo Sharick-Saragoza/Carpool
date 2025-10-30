@@ -6,6 +6,7 @@ import { AutoCompleteLocation } from '@/components/AutoCompleteLocation';
 import { Box } from '@/components/ui/box';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Heading } from '@/components/ui/heading';
 import {
   Slider,
   SliderFilledTrack,
@@ -31,18 +32,14 @@ export default function CreateCarpool() {
   const [datetime, setDatetime] = useState(new Date());
   const [seats, setSeats] = useState(1);
   const [driveInfo, setDriveInfo] = useState<string>();
-  const [location, setLocation] = useState();
-  const [isResult, setIsResult] = useState<boolean>(false);
+  const [startLocation, setStartLocation] = useState();
+  const [endLocation, setEndLocation] = useState();
   const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
 
   const [show, setShow] = useState(false);
   const [mode, setMode] = useState('date');
 
-  useEffect(() => {
-    setIsResult(location !== undefined);
-  }, [location]);
-
-  const handleLocationData = (feature) => {
+  const handleLocationData = (setter: React.Dispatch<React.SetStateAction<string>>, feature: any) => {
     const { country, state, city, postcode, name, street, housenumber } = feature;
 
     const locationData = {
@@ -55,11 +52,8 @@ export default function CreateCarpool() {
       housenumber,
       displayName: [name || street, housenumber].filter(Boolean).join(', '),
     };
-    console.log(feature)
-    console.log(JSON.stringify(locationData))
 
-    setLocation(JSON.stringify(locationData));
-    setIsResult(true);
+    setter(JSON.stringify(locationData));
   };
 
   const togglePreference = (preferenceId: string) => {
@@ -109,6 +103,13 @@ export default function CreateCarpool() {
     setSeats(value);
   };
 
+  const isNextDisabled = () => {
+    if (page === 1) return !startLocation;
+    if (page === 2) return !endLocation;
+    return false;
+  };
+
+
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -136,8 +137,8 @@ export default function CreateCarpool() {
           created_at: new Date(),
           driver_id: session?.user?.id,
           car_id: carId,
-          start_location: location,
-          end_location: location,
+          start_location: startLocation,
+          end_location: endLocation,
           date: datetime,
           seats_available: seats,
           updated_at: new Date(),
@@ -158,16 +159,32 @@ export default function CreateCarpool() {
   const renderContent = () => {
     if (page === 1) {
       return (
-        <View className='flex-1 p-4'>
+        <View className='flex-1 items-center'>
+          <View className='flex items-center pt-2'>
+            <Heading size='xl' className='pb-2'>Waar vertrek je?</Heading>
+            <Text>Dit is de plek waar je de passagiers ophaalt</Text>
+          </View>
             <AutoCompleteLocation
-              value={location ? JSON.parse(location).displayName : ''}
-              onSelect={handleLocationData} 
-              />
-        </View>
+              value={startLocation ? JSON.parse(startLocation).displayName : ''}
+              onSelect={(feature) => handleLocationData(setStartLocation, feature)}
+            />
+          </View>
       );
     }
 
     if (page === 2) {
+      return (
+        <View className='flex-1 items-center'>
+            <Heading size='xl' className='pt-2'>Waar ga je naar toe?</Heading>
+              <AutoCompleteLocation
+                value={endLocation ? JSON.parse(endLocation).displayName : ''}
+                onSelect={(feature) => handleLocationData(setEndLocation, feature)}
+              />
+          </View>
+      );
+    }
+
+    if (page === 3) {
       return (
         <ScrollView className='flex-1 p-4'>
           <Card className='p-4 mb-4'>
@@ -209,7 +226,7 @@ export default function CreateCarpool() {
       );
     }
 
-    if (page === 3) {
+    if (page === 4) {
       return (
         <ScrollView className='flex-1 p-4'>
           <Card className='p-4 mb-5'>
@@ -277,10 +294,10 @@ export default function CreateCarpool() {
             <ButtonText>Back</ButtonText>
           </Button>
         )}
-        {page !== 3 ? (
+        {page !== 4 ? (
           <Button
-            disabled={!isResult}
-            variant={!isResult ? 'outline' : 'solid'}
+            disabled={isNextDisabled()}
+            variant={isNextDisabled() ? 'outline' : 'solid'}
             className='flex-1'
             onPress={() => setPage(page + 1)}
           >

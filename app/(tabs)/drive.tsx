@@ -5,6 +5,7 @@ import { ScrollView, View } from 'react-native';
 import { CarpoolCard } from '@/components/CarpoolCard';
 import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Spinner } from '@/components/ui/spinner';
 import { Text } from '@/components/ui/text';
 import { useSession } from '@/context/session-context';
 import { getUserRides } from '@/libs/getUserRides';
@@ -50,33 +51,28 @@ export default function drive() {
   useEffect(() => {
     fetchRidesData();
   }, []);
-
-  const handleRefresh = () => {
-    fetchRidesData();
-  };
-
+  
   const handleCreateCarpool = () => {
     router.push('/createCarpool');
   };
 
   return (
-    <View className='flex-1'>
-      <View className='flex-1 m-3 bg-gray-400 p-0 rounded'>
-        <Card className='bg-gray-500 m-0'>
-          <Button size='lg' onPress={handleCreateCarpool}>
+  <View className="flex-1">
+    <View className="flex-1 m-3 bg-gray-400 p-0 rounded">
+      <Card className="bg-gray-500 m-0">
+        <Button size="lg" onPress={handleCreateCarpool}>
             <ButtonIcon as={Plus} />
             <ButtonText>Maak een Carpool aan</ButtonText>
           </Button>
         </Card>
-        <ScrollView>
-          {loading ? (
-            
-            <Card className=''>
-              <Text>Loading rides...</Text>
-            </Card>
 
-          ) : rides.length > 0 ? (
-            rides.map((ride) => (
+      {loading ? (
+        <View className="flex-1 justify-center items-center">
+          <Spinner size="large" />
+        </View>
+      ) : rides.length > 0 ? (
+        <ScrollView>
+          {rides.map((ride) => (
               <CarpoolCard
                 key={ride.id}
                 time={ride.dateTime}
@@ -84,14 +80,17 @@ export default function drive() {
                 endLocation={ride.toLocation}
                 avatar={ride.avatarUrl}
               />
-            ))
-          ) : (
-            <Card className='m-3 p-3'>
-              <Text>Maak nu een carpool aan!</Text>
-            </Card>
-          )}
+          ))}
         </ScrollView>
+      ) : (
+        <View className="flex-1 justify-center items-center">
+          <Text size="xl" bold>
+            Maak nu een carpool aan!
+          </Text>
+        </View>
+      )}
       </View>
     </View>
   );
+
 }

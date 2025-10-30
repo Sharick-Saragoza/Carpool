@@ -53,11 +53,9 @@ export const AutoCompleteLocation: React.FC<AutoCompleteLocationProps> = ({
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const skipNextFetchRef = useRef(false);
 
-    useEffect(() => {
-      if (value && value !== query) {
-        setQuery(value);
-      }
-    }, [value]);
+  useEffect(() => {
+    setQuery(value || '');
+  }, [value]);
 
   useEffect(() => {
     if (skipNextFetchRef.current) {
@@ -174,10 +172,10 @@ export const AutoCompleteLocation: React.FC<AutoCompleteLocationProps> = ({
   };
 
   return (
-    <View className='w-full max-w-md self-center'>
-      <Card className='relative'>
-        <Input onFocus={() => results.length > 0 && setOpen(true)}>
-          <InputSlot className='pl-3'>
+    <View className="w-full max-w-md self-center pt-10">
+      <Card className="relative w-full">
+        <Input className="w-full" onFocus={() => results.length > 0 && setOpen(true)}>
+          <InputSlot className="pl-3">
             <InputIcon as={SearchIcon} />
           </InputSlot>
           <InputField
@@ -186,23 +184,25 @@ export const AutoCompleteLocation: React.FC<AutoCompleteLocationProps> = ({
             onChangeText={setQuery}
           />
         </Input>
+
         {loading && (
-          <ActivityIndicator className='absolute right-3 top-3' size='small' />
+          <ActivityIndicator className="absolute right-3 top-3" size="small" />
+        )}
+
+        {open && results.length > 0 && (
+          <View className="absolute top-full left-0 right-0 mt-1 rounded-lg border border-gray-200 bg-white max-h-64 z-50 p-6">
+            <FlatList
+              keyboardShouldPersistTaps="handled"
+              data={results}
+              keyExtractor={(item, index) =>
+                `${item.properties.osm_id ?? index}-${index}`
+              }
+              renderItem={renderItem}
+            />
+          </View>
         )}
       </Card>
-
-      {open && results.length > 0 && (
-        <View className='mt-2 rounded-lg border border-gray-200 bg-white max-h-64'>
-          <FlatList
-            keyboardShouldPersistTaps='handled'
-            data={results}
-            keyExtractor={(item, index) =>
-              `${item.properties.osm_id ?? index}-${index}`
-            }
-            renderItem={renderItem}
-          />
-        </View>
-      )}
     </View>
+
   );
 };
