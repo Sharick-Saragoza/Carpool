@@ -6,7 +6,7 @@ import { View } from './ui/view';
 
 export function CarpoolCard({ time, startLocation, endLocation, avatar }) {
   return (
-    <Card variant='elevated' className='mx-5 mt-5'>
+    <Card variant='elevated' className='p-3'>
       <View className='flex-row items-center'>
         <Avatar className='w-12 h-12 rounded-full mr-4'>
           <AvatarImage source={{ uri: avatar }} />
