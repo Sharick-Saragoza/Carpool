@@ -10,7 +10,7 @@ export default function RidesScreen() {
   const [showPicker, setShowPicker] = useState(false);
   const [mode, setMode] = useState<'date' | 'time'>('date');
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   const handleChange = (event: any, date?: Date) => {
     if (event.type === 'dismissed') {
       setShowPicker(false);
@@ -224,17 +224,17 @@ export default function RidesScreen() {
             date={selectedDate}
           />
 
-            {/* Geen ritten voorbeeld */}
-            {/* <View className="py-12 items-center mt-6">
-              <Text className="text-xl font-semibold text-gray-800 text-center mb-2">
-                Geen ritten {isToday ? 'vandaag' : 'op deze datum'}
-              </Text>
-              <Text className="text-gray-500 text-center">
-                Er zijn geen carpools gevonden voor {isToday ? 'vandaag' : 'deze datum'}
-              </Text>
-            </View> */}
-          </ScrollView>
-        </Card>       
+          {/* Geen ritten voorbeeld */}
+          {/* <View className="py-12 items-center mt-6">
+            <Text className="text-xl font-semibold text-gray-800 text-center mb-2">
+              Geen ritten {isToday ? 'vandaag' : 'op deze datum'}
+            </Text>
+            <Text className="text-gray-500 text-center">
+              Er zijn geen carpools gevonden voor {isToday ? 'vandaag' : 'deze datum'}
+            </Text>
+          </View> */}
+        </ScrollView>
+      </Card>       
     </ScreenWrapper>
   );
 }
