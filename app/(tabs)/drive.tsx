@@ -5,17 +5,21 @@ import { ScrollView, View } from 'react-native';
 import { CarpoolCard } from '@/components/CarpoolCard';
 import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Popover, PopoverArrow, PopoverBackdrop, PopoverBody, PopoverContent } from '@/components/ui/popover';
 import { Spinner } from '@/components/ui/spinner';
 import { Text } from '@/components/ui/text';
 import { useSession } from '@/context/session-context';
+import { getUserCars } from '@/libs/getUserCars';
 import { getUserRides } from '@/libs/getUserRides';
 
 export default function drive() {
   const session = useSession();
   const userId = session.user.id;
 
+  const [isOpen, setIsOpen] = useState(false);
   const [rides, setRides] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hasCar, setHasCar] = useState(null);
 
   const fetchRidesData = async () => {
     try {
@@ -48,12 +52,30 @@ export default function drive() {
     }
   };
 
-  useEffect(() => {
-    fetchRidesData();
-  }, []);
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
+  
+  const handleClose = () => {
+    setIsOpen(false);
+  };
 
-  const handleCreateCarpool = () => {
-    router.push('/createCarpool');
+  const checkIsCar = async () => {
+    try {
+      const car = await getUserCars(userId);
+      setHasCar(car !== null);
+    } catch (error) {
+      console.error('Error checking car:', error);
+      setHasCar(false);
+    }
+  };
+
+  const handleCreateCarpool = async () => {
+    if (hasCar) {
+      router.push('/createCarpool');
+    } else {
+      handleOpen(); // Show popover if no car
+    }
   };
 
   const formatRideDate = (isoString: string) => {
@@ -61,23 +83,66 @@ export default function drive() {
     return `${date.toLocaleDateString('nl-NL', { weekday: 'long', month: 'long', day: 'numeric' })} ${date.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}`;
   };
 
+  useEffect(() => {
+    fetchRidesData();
+    checkIsCar();
+  }, []);
+
+  // Show loading while checking for car
+  if (hasCar === null) {
+    return (
+      <View className='flex-1 justify-center items-center'>
+        <Spinner size='large' />
+      </View>
+    );
+  }
+
   return (
-  <View className="flex-1">
-    <View className="flex-1 m-3 bg-gray-400 p-0 rounded">
-      <Card className="bg-gray-500 m-0">
-        <Button size="lg" onPress={handleCreateCarpool}>
-            <ButtonIcon as={Plus} />
-            <ButtonText>Maak een Carpool aan</ButtonText>
-          </Button>
+    <View className='flex-1'>
+      <View className='flex-1 m-3 bg-gray-400 p-0 rounded'>
+        <Card className='bg-gray-500 m-0'>
+          {hasCar ? (
+            // Normal button when user has a car
+            <Button size='lg' onPress={handleCreateCarpool}>
+              <ButtonIcon as={Plus} />
+              <ButtonText>Maak een Carpool aan</ButtonText>
+            </Button>
+          ) : (
+            <Popover 
+              isOpen={isOpen} 
+              onClose={handleClose}
+              onOpen={handleOpen}
+              placement='bottom'
+              size='md'
+              trigger={(triggerProps) => {
+                return (
+                  <Button size='lg' {...triggerProps}>
+                    <ButtonIcon as={Plus} />
+                    <ButtonText>Maak een Carpool aan</ButtonText>
+                  </Button>
+                )
+              }}
+            >
+              <PopoverBackdrop />
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverBody>
+                  <Text className="text-typography-900">
+                    Je moet eerst een auto toevoegen voordat je een carpool kunt aanmaken.
+                  </Text>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          )}
         </Card>
 
-      {loading ? (
-        <View className="flex-1 justify-center items-center">
-          <Spinner size="large" />
-        </View>
-      ) : rides.length > 0 ? (
-        <ScrollView>
-          {rides.map((ride) => (
+        {loading ? (
+          <View className='flex-1 justify-center items-center'>
+            <Spinner size='large' />
+          </View>
+        ) : rides.length > 0 ? (
+          <ScrollView>
+            {rides.map((ride) => (
               <CarpoolCard
                 key={ride.id}
                 time={formatRideDate(ride.dateTime)}
@@ -85,17 +150,16 @@ export default function drive() {
                 endLocation={ride.toLocation}
                 avatar={ride.avatarUrl}
               />
-          ))}
-        </ScrollView>
-      ) : (
-        <View className="flex-1 justify-center items-center">
-          <Text size="xl" bold>
-            Maak nu een carpool aan!
-          </Text>
-        </View>
-      )}
+            ))}
+          </ScrollView>
+        ) : (
+          <View className='flex-1 justify-center items-center'>
+            <Text size='xl' bold>
+              Maak nu een carpool aan!
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );
-
 }
