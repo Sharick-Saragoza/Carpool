@@ -59,9 +59,13 @@ export default function drive() {
     }
   };
 
-  useEffect(() => {
-    fetchRidesData();
-  }, []);
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
+  
+  const handleClose = () => {
+    setIsOpen(false);
+  };
 
   const handleOpen = () => {
     setIsOpen(true);
