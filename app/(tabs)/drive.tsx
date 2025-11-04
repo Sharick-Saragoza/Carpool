@@ -74,7 +74,7 @@ export default function drive() {
     if (hasCar) {
       router.push('/createCarpool');
     } else {
-      handleOpen(); // Show popover if no car
+      handleOpen(); 
     }
   };
 
@@ -88,7 +88,6 @@ export default function drive() {
     checkIsCar();
   }, []);
 
-  // Show loading while checking for car
   if (hasCar === null) {
     return (
       <View className='flex-1 justify-center items-center'>
@@ -102,7 +101,6 @@ export default function drive() {
       <View className='flex-1 m-3 bg-gray-400 p-0 rounded'>
         <Card className='bg-gray-500 m-0'>
           {hasCar ? (
-            // Normal button when user has a car
             <Button size='lg' onPress={handleCreateCarpool}>
               <ButtonIcon as={Plus} />
               <ButtonText>Maak een Carpool aan</ButtonText>
