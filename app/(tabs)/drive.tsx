@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { Plus } from 'lucide-react-native';
-import { ScrollView } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { CarpoolCard } from '@/components/CarpoolCard';
 import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -23,12 +23,15 @@ export default function MakeCarpool() {
           </Button>
         </Card>
 
-        <CarpoolCard
-          profileImage="https://randomuser.me/api/portraits/men/32.jpg"
-          from="Amsterdam"
-          to="Utrecht"
-          time="08:00 - 09:00"
-        />
+        <View className='m-5'>
+          <CarpoolCard
+            profileImage="https://randomuser.me/api/portraits/men/32.jpg"
+            from="Amsterdam"
+            to="Utrecht"
+            time="08:00 - 09:00"
+          />
+        </View>
+        
       </Card>
     </ScrollView>
   );
