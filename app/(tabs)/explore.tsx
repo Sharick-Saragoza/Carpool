@@ -135,9 +135,8 @@ export default function ExploreScreen() {
                       </Pressable>
                     </View>
                   </View>
-                </View>
-              </Modal>
-            )}
+                </Modal>
+              )}
 
             {/* Android inline picker */}
             {Platform.OS === 'android' && showPicker && (
