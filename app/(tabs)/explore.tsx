@@ -135,6 +135,7 @@ export default function ExploreScreen() {
                       </Pressable>
                     </View>
                   </View>
+                  </View>
                 </Modal>
               )}
 
