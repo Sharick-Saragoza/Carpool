@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { CarpoolCard } from '@/components/CarpoolCard';
 import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -97,67 +98,69 @@ export default function drive() {
   }
 
   return (
-    <View className='flex-1'>
-      <View className='flex-1 m-3 bg-gray-400 p-0 rounded'>
-        <Card className='bg-gray-500 m-0'>
-          {hasCar ? (
-            <Button size='lg' onPress={handleCreateCarpool}>
-              <ButtonIcon as={Plus} />
-              <ButtonText>Maak een Carpool aan</ButtonText>
-            </Button>
-          ) : (
-            <Popover 
-              isOpen={isOpen} 
-              onClose={handleClose}
-              onOpen={handleOpen}
-              placement='bottom'
-              size='md'
-              trigger={(triggerProps) => {
-                return (
-                  <Button size='lg' {...triggerProps}>
-                    <ButtonIcon as={Plus} />
-                    <ButtonText>Maak een Carpool aan</ButtonText>
-                  </Button>
-                )
-              }}
-            >
-              <PopoverBackdrop />
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverBody>
-                  <Text className="text-typography-900">
-                    Je moet eerst een auto toevoegen voordat je een carpool kunt aanmaken.
-                  </Text>
-                </PopoverBody>
-              </PopoverContent>
-            </Popover>
-          )}
-        </Card>
+    <SafeAreaView>
+      <View className='flex-1'>
+        <View className='flex-1 m-3 bg-gray-400 p-0 rounded'>
+          <Card className='bg-gray-500 m-0'>
+            {hasCar ? (
+              <Button size='lg' onPress={handleCreateCarpool}>
+                <ButtonIcon as={Plus} />
+                <ButtonText>Maak een Carpool aan</ButtonText>
+              </Button>
+            ) : (
+              <Popover 
+                isOpen={isOpen} 
+                onClose={handleClose}
+                onOpen={handleOpen}
+                placement='bottom'
+                size='md'
+                trigger={(triggerProps) => {
+                  return (
+                    <Button size='lg' {...triggerProps}>
+                      <ButtonIcon as={Plus} />
+                      <ButtonText>Maak een Carpool aan</ButtonText>
+                    </Button>
+                  )
+                }}
+              >
+                <PopoverBackdrop />
+                <PopoverContent>
+                  <PopoverArrow />
+                  <PopoverBody>
+                    <Text className="text-typography-900">
+                      Je moet eerst een auto toevoegen voordat je een carpool kunt aanmaken.
+                    </Text>
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
+            )}
+          </Card>
 
-        {loading ? (
-          <View className='flex-1 justify-center items-center'>
-            <Spinner size='large' />
-          </View>
-        ) : rides.length > 0 ? (
-          <ScrollView>
-            {rides.map((ride) => (
-              <CarpoolCard
-                key={ride.id}
-                time={formatRideDate(ride.dateTime)}
-                startLocation={ride.fromLocation}
-                endLocation={ride.toLocation}
-                avatar={ride.avatarUrl}
-              />
-            ))}
-          </ScrollView>
-        ) : (
-          <View className='flex-1 justify-center items-center'>
-            <Text size='xl' bold>
-              Maak nu een carpool aan!
-            </Text>
-          </View>
-        )}
+          {loading ? (
+            <View className='flex-1 justify-center items-center'>
+              <Spinner size='large' />
+            </View>
+          ) : rides.length > 0 ? (
+            <ScrollView>
+              {rides.map((ride) => (
+                <CarpoolCard
+                  key={ride.id}
+                  time={formatRideDate(ride.dateTime)}
+                  startLocation={ride.fromLocation}
+                  endLocation={ride.toLocation}
+                  avatar={ride.avatarUrl}
+                />
+              ))}
+            </ScrollView>
+          ) : (
+            <View className='flex-1 justify-center items-center'>
+              <Text size='xl' bold>
+                Maak nu een carpool aan!
+              </Text>
+            </View>
+          )}
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
