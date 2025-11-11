@@ -100,10 +100,12 @@ export default function UserAvatar({ url, size = 150, onUpload }: Props) {
 
     return (
         <View>
+            <View className='items-center mb-5'>
             <Avatar size='md' style={avatarSize}>
                 <AvatarFallbackText>Avatar</AvatarFallbackText>
                 <AvatarImage source={avatarUrl ? { uri: avatarUrl } : undefined} />
             </Avatar>
+            </View>
 
             <View>
                 <Button onPress={uploadAvatar} disabled={uploading}>

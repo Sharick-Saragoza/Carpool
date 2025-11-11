@@ -15,7 +15,6 @@ import { getUserCars } from '@/libs/getUserCars';
 import { saveCarData } from '@/libs/saveCarData';
 import { showError } from '@/libs/showError';
 import { updateRecord } from '@/libs/updateRecord';
-import UserAvatar from './UserAvatar';
 import { Card } from './ui/card';
 
 export default function Account() {
@@ -27,7 +26,6 @@ export default function Account() {
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [postalCode, setPostalCode] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('');
 
   const [carId, setCarId] = useState<string>('');
   const [brand, setBrand] = useState('');
@@ -94,27 +92,6 @@ export default function Account() {
       setLoading(false);
     }
   }
-
-  const handleAvatarUpload = async (url: string) => {
-    setAvatarUrl(url);
-
-    if (devMode) {
-      console.log('[DEV MODE] Avatar uploaded:', url);
-      Alert.alert('Avatar updated! (dev mode)');
-      return;
-    }
-
-    try {
-      await updateRecord({
-        session,
-        table: 'profiles',
-        data: { id: userId, avatar_url: url },
-      });
-      Alert.alert('Avatar updated!');
-    } catch (error) {
-      showError(error);
-    }
-  };
 
   const updateProfile = async () => {
     try {
@@ -229,82 +206,79 @@ export default function Account() {
   ];
 
   return (
-    <View className='flex-1'>
-      <View className='flex-1 bg-red-400'>
-      <Card className='bg-gray-400 m-3'>
-        <UserAvatar size={100} url={avatarUrl} onUpload={handleAvatarUpload} />
-        <View className='mb-6 space-y-2'>
-          {profile.map(({ disabled, label, value, setter }, i) => (
-            <Input
-              key={i}
-              variant='outline'
-              size='md'
-              isDisabled={disabled}
-              className='bg-white rounded-md border border-gray-300 px-3 py-2'
-            >
-              <InputField
-                placeholder={label}
-                value={value}
-                onChange={handleInputChange(setter)}
-                editable={!disabled}
-                className='text-black'
-              />
-            </Input>
-          ))}
-        </View>
-
-        <View className='mb-6 space-y-2'>
-          {car.map(({ disabled, label, value, setter }, i) => (
-            <Input
-              key={i}
-              variant='outline'
-              size='md'
-              isDisabled={disabled}
-              className='bg-white rounded-md border border-gray-300 px-3 py-2'
-            >
-              <InputField
-                placeholder={label}
-                value={value}
-                onChange={handleInputChange(setter)}
-                editable={!disabled}
-                keyboardType={label === 'Seats' ? 'numeric' : 'default'}
-                className='text-black'
-              />
-            </Input>
-          ))}
-        </View>
-
-        <View className='flex-row justify-between space-x-4'>
-          <Button
-            onPress={updateProfile}
-            isDisabled={loading}
-            className='flex-1 bg-green-600 justify-center items-center rounded-md py-3'
+    <View className='flex-1 justify-between'>
+      <View>
+      <View className='mt-6 mb-6 space-y-2'>
+        {profile.map(({ disabled, label, value, setter }, i) => (
+          <Input
+            key={i}
+            variant='outline'
+            size='md'
+            isDisabled={disabled}
+            className='bg-white rounded-md border border-gray-300 px-3 py-2'
           >
-            {loading ? (
-              <ActivityIndicator color='white' />
-            ) : (
-              <ButtonText className='text-white font-bold'>Update</ButtonText>
-            )}
-          </Button>
+            <InputField
+              placeholder={label}
+              value={value}
+              onChange={handleInputChange(setter)}
+              editable={!disabled}
+              className='text-black'
+            />
+          </Input>
+        ))}
+      </View>
 
-          <Button
-            onPress={async () => {
-              if (devMode) {
-                console.log('[DEV MODE] Sign out skipped');
-                Alert.alert('Signed out! (dev mode)');
-                return;
-              }
-              const supabase = getSupabaseClient();
-              if (!supabase) return;
-
-              await supabase.auth.signOut();
-            }}
-            className='flex-1 bg-red-600 justify-center items-center rounded-md py-3'
+      <View className='mb-6 space-y-2'>
+        {car.map(({ disabled, label, value, setter }, i) => (
+          <Input
+            key={i}
+            variant='outline'
+            size='md'
+            isDisabled={disabled}
+            className='bg-white rounded-md border border-gray-300 px-3 py-2'
           >
-            <ButtonText className='text-white font-bold'>Sign out</ButtonText>
-          </Button>
-        </View>
-      </Card>
+            <InputField
+              placeholder={label}
+              value={value}
+              onChange={handleInputChange(setter)}
+              editable={!disabled}
+              keyboardType={label === 'Seats' ? 'numeric' : 'default'}
+              className='text-black'
+            />
+          </Input>
+        ))}
+      </View>
+      </View>
+
+      <View className='flex-row justify-between space-x-4 '>
+        <Button
+          onPress={updateProfile}
+          isDisabled={loading}
+          className='flex-1 bg-green-600 justify-center items-center rounded-md py-3'
+        >
+          {loading ? (
+            <ActivityIndicator color='white' />
+          ) : (
+            <ButtonText className='text-white font-bold'>Update</ButtonText>
+          )}
+        </Button>
+
+        <Button
+          onPress={async () => {
+            if (devMode) {
+              console.log('[DEV MODE] Sign out skipped');
+              Alert.alert('Signed out! (dev mode)');
+              return;
+            }
+            const supabase = getSupabaseClient();
+            if (!supabase) return;
+
+            await supabase.auth.signOut();
+          }}
+          className='flex-1 bg-red-600 justify-center items-center rounded-md py-3'
+        >
+          <ButtonText className='text-white font-bold'>Sign out</ButtonText>
+        </Button>
       </View>
     </View>
   );
