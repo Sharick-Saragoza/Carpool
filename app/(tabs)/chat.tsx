@@ -1,7 +1,9 @@
-import { Text } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 
 export default function ChatScreen() {
   return (
-    <Text className="">Chat Screen</Text>
+    <ScrollView>
+      <Text className="">Chat Screen</Text>
+    </ScrollView>
   );
 }
