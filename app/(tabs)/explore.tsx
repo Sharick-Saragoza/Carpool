@@ -153,7 +153,7 @@ export default function ExploreScreen() {
             {/* Cards voorbeeld */}
             <View className='mt-5'>
               <CarpoolCard
-                time={selectedDate}
+                time={''} 
                 startLocation={'Assen'}
                 endLocation={'groningen'}
                 avatar={'image'}
