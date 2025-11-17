@@ -62,14 +62,6 @@ export default function drive() {
   const handleOpen = () => {
     setIsOpen(true);
   };
-  
-  const handleClose = () => {
-    setIsOpen(false);
-  };
-
-  const handleOpen = () => {
-    setIsOpen(true);
-  };
 
   const handleClose = () => {
     setIsOpen(false);
@@ -112,8 +104,7 @@ export default function drive() {
   }
 
   return (
-    <SafeAreaView>
-      <View className='flex-1'>
+    <SafeAreaView className='flex-1'>
         <View className='flex-1 m-3 bg-gray-400 p-0 rounded'>
           <Card className='bg-gray-500 m-0'>
             {hasCar ? (
@@ -156,15 +147,17 @@ export default function drive() {
               <Spinner size='large' />
             </View>
           ) : rides.length > 0 ? (
-            <ScrollView>
+            <ScrollView className='p-3'>
               {rides.map((ride) => (
-                <CarpoolCard
-                  key={ride.id}
-                  time={formatRideDate(ride.dateTime)}
-                  startLocation={ride.fromLocation}
-                  endLocation={ride.toLocation}
-                  avatar={ride.avatarUrl}
-                />
+                <View className='mt-5'>
+                  <CarpoolCard
+                    key={ride.id}
+                    time={formatRideDate(ride.dateTime)}
+                    startLocation={ride.fromLocation}
+                    endLocation={ride.toLocation}
+                    avatar={ride.avatarUrl}
+                  />
+                </View>
               ))}
             </ScrollView>
           ) : (
@@ -175,7 +168,6 @@ export default function drive() {
             </View>
           )}
         </View>
-      </View>
     </SafeAreaView>
   );
 }
