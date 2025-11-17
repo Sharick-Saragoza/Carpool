@@ -12,5 +12,10 @@ export async function getUserCars(userId: string) {
         .maybeSingle();
 
     if (error) throw error;
+
+    if (!data) {
+        return null;
+    }
+
     return data;
 }

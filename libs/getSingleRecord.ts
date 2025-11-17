@@ -1,6 +1,6 @@
 import { getSupabaseClient } from '@/context/supabase';
 
-export async function getRecord<T>(
+export async function getSingleRecord<T>(
     table: string,
     userId: string,
     matchField: string = 'id',

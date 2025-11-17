@@ -153,11 +153,10 @@ export default function ExploreScreen() {
             {/* Cards voorbeeld */}
             <View className='mt-5'>
               <CarpoolCard
-                profileImage={'image'}
-                from={'Groningen'}
-                to={'Assen'}
-                time={'1 uur'}
-                date={selectedDate}
+                time={''} 
+                startLocation={'Assen'}
+                endLocation={'groningen'}
+                avatar={'image'}
               />
             </View>
           </ScrollView>
