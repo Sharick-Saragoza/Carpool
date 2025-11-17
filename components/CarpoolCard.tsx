@@ -6,13 +6,12 @@ import { View } from './ui/view';
 
 export function CarpoolCard({ profileImage, from, to, time }) {
   return (
-    <Card size="md" variant="elevated" className="m-5 p-3 ">
+    <Card size="md" variant="elevated" className="p-3">
       <View className="flex-row items-center">
         <Avatar
           source={{ uri: profileImage }}
           className="w-12 h-12 rounded-full mr-4"
         />
-
         <View className="flex-1">
           <Heading size="md">
             {from} → {to}
