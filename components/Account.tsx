@@ -15,7 +15,18 @@ import { getUserCars } from '@/libs/getUserCars';
 import { saveCarData } from '@/libs/saveCarData';
 import { showError } from '@/libs/showError';
 import { updateRecord } from '@/libs/updateRecord';
-import { Card } from './ui/card';
+
+import {
+  Select,
+  SelectTrigger,
+  SelectInput,
+  SelectIcon,
+  SelectPortal,
+  SelectBackdrop,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
+import { ChevronDownIcon } from '@/components/ui/icon';
 
 export default function Account() {
   const session = useSession();
@@ -208,49 +219,84 @@ export default function Account() {
   return (
     <View className='flex-1 justify-between'>
       <View>
-      <View className='mt-6 mb-6 space-y-2'>
-        {profile.map(({ disabled, label, value, setter }, i) => (
-          <Input
-            key={i}
-            variant='outline'
-            size='md'
-            isDisabled={disabled}
-            className='bg-white rounded-md border border-gray-300 px-3 py-2'
-          >
-            <InputField
-              placeholder={label}
-              value={value}
-              onChange={handleInputChange(setter)}
-              editable={!disabled}
-              className='text-black'
-            />
-          </Input>
-        ))}
+        <View className='mt-6 mb-6 space-y-2'>
+          {profile.map(({ disabled, label, value, setter }, i) => (
+            <Input
+              key={i}
+              variant='outline'
+              size='md'
+              isDisabled={disabled}
+              className='bg-white rounded-md border border-gray-300 px-3 py-2'
+            >
+              <InputField
+                placeholder={label}
+                value={value}
+                onChange={handleInputChange(setter)}
+                editable={!disabled}
+                className='text-black'
+              />
+            </Input>
+          ))}
+        </View>
+
+        <View className='mb-6 space-y-2'>
+          {car.map(({ disabled, label, value, setter }, i) => {
+            if (label === 'Car Brand' || label === 'Color') {
+              return (
+                <Select key={i} value={value} onValueChange={setter}>
+                  <SelectTrigger
+                    variant='outline'
+                    size='md'
+                    className='bg-white rounded-md border border-gray-300 px-3 py-2'
+                  >
+                    <SelectInput placeholder={label} />
+                    <SelectIcon className='mr-3' as={ChevronDownIcon} />
+                  </SelectTrigger>
+                  <SelectPortal>
+                    <SelectBackdrop />
+                    <SelectContent>
+                      {label === 'Car Brand' ? (
+                        <>
+                          <SelectItem label='Toyota' value='Toyota' />
+                          <SelectItem label='BMW' value='BMW' />
+                          <SelectItem label='Tesla' value='Tesla' />
+                        </>
+                      ) : (
+                        <>
+                          <SelectItem label='Red' value='Red' />
+                          <SelectItem label='Blue' value='Blue' />
+                          <SelectItem label='Black' value='Black' />
+                        </>
+                      )}
+                    </SelectContent>
+                  </SelectPortal>
+                </Select>
+              );
+            } else {
+              return (
+                <Input
+                  key={i}
+                  variant='outline'
+                  size='md'
+                  isDisabled={disabled}
+                  className='bg-white rounded-md border border-gray-300 px-3 py-2'
+                >
+                  <InputField
+                    placeholder={label}
+                    value={value}
+                    onChange={handleInputChange(setter)}
+                    editable={!disabled}
+                    keyboardType={label === 'Seats' ? 'numeric' : 'default'}
+                    className='text-black'
+                  />
+                </Input>
+              );
+            }
+          })}
+        </View>
       </View>
 
-      <View className='mb-6 space-y-2'>
-        {car.map(({ disabled, label, value, setter }, i) => (
-          <Input
-            key={i}
-            variant='outline'
-            size='md'
-            isDisabled={disabled}
-            className='bg-white rounded-md border border-gray-300 px-3 py-2'
-          >
-            <InputField
-              placeholder={label}
-              value={value}
-              onChange={handleInputChange(setter)}
-              editable={!disabled}
-              keyboardType={label === 'Seats' ? 'numeric' : 'default'}
-              className='text-black'
-            />
-          </Input>
-        ))}
-      </View>
-      </View>
-
-      <View className='flex-row justify-between space-x-4 '>
+      <View className='flex-row justify-between space-x-4'>
         <Button
           onPress={updateProfile}
           isDisabled={loading}
