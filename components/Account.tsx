@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Alert, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  type NativeSyntheticEvent,
+  type TextInputChangeEventData,
+  View,
+} from 'react-native';
+import { Button, ButtonText } from '@/components/ui/button';
+import { Input, InputField } from '@/components/ui/input';
 import { useSession } from '@/context/session-context';
 import { getSupabaseClient } from '@/context/supabase';
 import { getSingleRecord } from '@/libs/getSingleRecord';
@@ -7,9 +15,18 @@ import { getUserCars } from '@/libs/getUserCars';
 import { saveCarData } from '@/libs/saveCarData';
 import { showError } from '@/libs/showError';
 import { updateRecord } from '@/libs/updateRecord';
-import UserAvatar from './UserAvatar';
-import { Button, ButtonText } from './ui/button';
-import { Input, InputField } from './ui/input';
+
+import {
+  Select,
+  SelectTrigger,
+  SelectInput,
+  SelectIcon,
+  SelectPortal,
+  SelectBackdrop,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
+import { ChevronDownIcon } from '@/components/ui/icon';
 
 export default function Account() {
   const session = useSession();
@@ -20,7 +37,6 @@ export default function Account() {
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [postalCode, setPostalCode] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('');
 
   const [carId, setCarId] = useState<string>('');
   const [brand, setBrand] = useState('');
@@ -62,7 +78,7 @@ export default function Account() {
       }
 
       const [profile, car] = await Promise.all([
-        getSingleRecord<Profile>('profiles', userId),
+        getRecord<Profile>('profiles', userId),
         getUserCars(userId),
       ]);
 
@@ -87,27 +103,6 @@ export default function Account() {
       setLoading(false);
     }
   }
-
-  const handleAvatarUpload = async (url: string) => {
-    setAvatarUrl(url);
-
-    if (devMode) {
-      console.log('[DEV MODE] Avatar uploaded:', url);
-      Alert.alert('Avatar updated! (dev mode)');
-      return;
-    }
-
-    try {
-      await updateRecord({
-        session,
-        table: 'profiles',
-        data: { id: userId, avatar_url: url },
-      });
-      Alert.alert('Avatar updated!');
-    } catch (error) {
-      showError(error);
-    }
-  };
 
   const updateProfile = async () => {
     try {
@@ -160,23 +155,35 @@ export default function Account() {
     }
   };
 
+  // Typing voor onChange handler
+  const handleInputChange =
+    (setter: (text: string) => void) =>
+    (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+      setter(e.nativeEvent.text);
+    };
+
   const profile = [
     {
-      isdisabled: false,
-      placeholder: 'Full Name',
+      disabled: false,
+      label: 'Full Name',
       value: fullName,
       setter: setFullName,
     },
-    { isdisabled: false, placeholder: 'Phone', value: phone, setter: setPhone },
     {
-      isdisabled: false,
-      placeholder: 'Address',
+      disabled: false,
+      label: 'Phone',
+      value: phone,
+      setter: setPhone,
+    },
+    {
+      disabled: false,
+      label: 'Address',
       value: address,
       setter: setAddress,
     },
     {
-      isdisabled: false,
-      placeholder: 'Postal Code',
+      disabled: false,
+      label: 'Postal Code',
       value: postalCode,
       setter: setPostalCode,
     },
@@ -184,55 +191,124 @@ export default function Account() {
 
   const car = [
     {
-      isdisabled: false,
-      placeholder: 'Car Brand',
+      disabled: false,
+      label: 'Car Brand',
       value: brand,
       setter: setBrand,
     },
-    { isdisabled: true, placeholder: 'Model', value: model, setter: setModel },
-    { isdisabled: true, placeholder: 'Color', value: color, setter: setColor },
-    { isdisabled: true, placeholder: 'Seats', value: seats, setter: setSeats },
+    {
+      disabled: false,
+      label: 'Model',
+      value: model,
+      setter: setModel,
+    },
+    {
+      disabled: false,
+      label: 'Color',
+      value: color,
+      setter: setColor,
+    },
+    {
+      disabled: false,
+      label: 'Seats',
+      value: seats?.toString() || '',
+      setter: (text: string) => setSeats(text ? parseInt(text) : null),
+    },
   ];
 
   return (
-    <View>
-      <UserAvatar
-        size={200}
-        url={avatarUrl}
-        onUpload={(url: string) => handleAvatarUpload(url)}
-      />
+    <View className='flex-1 justify-between'>
+      <View>
+        <View className='mt-6 mb-6 space-y-2'>
+          {profile.map(({ disabled, label, value, setter }, i) => (
+            <Input
+              key={i}
+              variant='outline'
+              size='md'
+              isDisabled={disabled}
+              className='bg-white rounded-md border border-gray-300 px-3 py-2'
+            >
+              <InputField
+                placeholder={label}
+                value={value}
+                onChange={handleInputChange(setter)}
+                editable={!disabled}
+                className='text-black'
+              />
+            </Input>
+          ))}
+        </View>
 
-      <View className='mb-20'>
-        {profile.map(({ isdisabled, placeholder, value, setter }, i) => (
-          <Input key={i} isDisabled={isdisabled}>
-            <InputField
-              placeholder={placeholder}
-              value={value}
-              onChangeText={setter}
-            />
-          </Input>
-        ))}
+        <View className='mb-6 space-y-2'>
+          {car.map(({ disabled, label, value, setter }, i) => {
+            if (label === 'Car Brand' || label === 'Color') {
+              return (
+                <Select key={i} value={value} onValueChange={setter}>
+                  <SelectTrigger
+                    variant='outline'
+                    size='md'
+                    className='bg-white rounded-md border border-gray-300 px-3 py-2'
+                  >
+                    <SelectInput placeholder={label} />
+                    <SelectIcon className='mr-3' as={ChevronDownIcon} />
+                  </SelectTrigger>
+                  <SelectPortal>
+                    <SelectBackdrop />
+                    <SelectContent>
+                      {label === 'Car Brand' ? (
+                        <>
+                          <SelectItem label='Toyota' value='Toyota' />
+                          <SelectItem label='BMW' value='BMW' />
+                          <SelectItem label='Tesla' value='Tesla' />
+                        </>
+                      ) : (
+                        <>
+                          <SelectItem label='Red' value='Red' />
+                          <SelectItem label='Blue' value='Blue' />
+                          <SelectItem label='Black' value='Black' />
+                        </>
+                      )}
+                    </SelectContent>
+                  </SelectPortal>
+                </Select>
+              );
+            } else {
+              return (
+                <Input
+                  key={i}
+                  variant='outline'
+                  size='md'
+                  isDisabled={disabled}
+                  className='bg-white rounded-md border border-gray-300 px-3 py-2'
+                >
+                  <InputField
+                    placeholder={label}
+                    value={value}
+                    onChange={handleInputChange(setter)}
+                    editable={!disabled}
+                    keyboardType={label === 'Seats' ? 'numeric' : 'default'}
+                    className='text-black'
+                  />
+                </Input>
+              );
+            }
+          })}
+        </View>
       </View>
 
-      <View>
-        {car.map(({ isdisabled, placeholder, value, setter }, i) => (
-          <Input key={i} isDisabled={isdisabled}>
-            <InputField
-              placeholder={placeholder}
-              value={value}
-              onChangeText={setter}
-            />
-          </Input>
-        ))}
-      </View>
-
-      <View>
-        <Button onPress={updateProfile} disabled={loading}>
-          <ButtonText>{loading ? 'Loading ...' : 'Update'}</ButtonText>
+      <View className='flex-row justify-between space-x-4'>
+        <Button
+          onPress={updateProfile}
+          isDisabled={loading}
+          className='flex-1 bg-green-600 justify-center items-center rounded-md py-3'
+        >
+          {loading ? (
+            <ActivityIndicator color='white' />
+          ) : (
+            <ButtonText className='text-white font-bold'>Update</ButtonText>
+          )}
         </Button>
-      </View>
 
-      <View>
         <Button
           onPress={async () => {
             if (devMode) {
@@ -245,8 +321,9 @@ export default function Account() {
 
             await supabase.auth.signOut();
           }}
+          className='flex-1 bg-red-600 justify-center items-center rounded-md py-3'
         >
-          <ButtonText>Sign out</ButtonText>
+          <ButtonText className='text-white font-bold'>Sign out</ButtonText>
         </Button>
       </View>
     </View>

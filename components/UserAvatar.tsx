@@ -112,19 +112,21 @@ export default function UserAvatar({ url, size = 150, onUpload }: Props) {
       setUploading(false);
     }
   }
-
+  
   return (
-    <View>
-      <Avatar size='md' style={avatarSize}>
-        <AvatarFallbackText>Avatar</AvatarFallbackText>
-        <AvatarImage source={avatarUrl ? { uri: avatarUrl } : undefined} />
-      </Avatar>
-
       <View>
-        <Button onPress={uploadAvatar} disabled={uploading}>
-          <ButtonText>{uploading ? 'Uploading ...' : 'Upload'}</ButtonText>
-        </Button>
-      </View>
+        <View className='items-center mb-5'>
+        <Avatar size='md' style={avatarSize}>
+            <AvatarFallbackText>Avatar</AvatarFallbackText>
+            <AvatarImage source={avatarUrl ? { uri: avatarUrl } : undefined} />
+        </Avatar>
+        </View>
+
+        <View>
+            <Button onPress={uploadAvatar} disabled={uploading}>
+                <ButtonText>{uploading ? 'Uploading ...' : 'Upload'}</ButtonText>
+            </Button>
+        </View>
     </View>
   );
 }
