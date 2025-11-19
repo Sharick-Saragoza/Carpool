@@ -1,23 +1,22 @@
-import { Avatar } from './ui/avatar';
+import { Avatar, AvatarImage } from './ui/avatar';
 import { Card } from './ui/card';
 import { Heading } from './ui/heading';
 import { Text } from './ui/text';
 import { View } from './ui/view';
 
-export function CarpoolCard({ profileImage, from, to, time }) {
+export function CarpoolCard({ time, startLocation, endLocation, avatar }) {
   return (
-    <Card size="md" variant="elevated" className="m-5 p-3 ">
-      <View className="flex-row items-center">
-        <Avatar
-          source={{ uri: profileImage }}
-          className="w-12 h-12 rounded-full mr-4"
-        />
+    <Card variant='elevated' className='p-3'>
+      <View className='flex-row items-center'>
+        <Avatar className='w-12 h-12 rounded-full mr-4'>
+          <AvatarImage source={{ uri: avatar }} />
+        </Avatar>
 
-        <View className="flex-1">
-          <Heading size="md">
-            {from} → {to}
+        <View className='flex-1'>
+          <Heading size='md'>
+            {startLocation} → {endLocation}
           </Heading>
-          <Text size="sm" className="mt-1">
+          <Text size='sm' className='mt-1'>
             {time}
           </Text>
         </View>

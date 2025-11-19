@@ -10,7 +10,7 @@ import { Button, ButtonText } from '@/components/ui/button';
 import { Input, InputField } from '@/components/ui/input';
 import { useSession } from '@/context/session-context';
 import { getSupabaseClient } from '@/context/supabase';
-import { getRecord } from '@/libs/getRecord';
+import { getSingleRecord } from '@/libs/getSingleRecord';
 import { getUserCars } from '@/libs/getUserCars';
 import { saveCarData } from '@/libs/saveCarData';
 import { showError } from '@/libs/showError';
