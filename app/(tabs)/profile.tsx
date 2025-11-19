@@ -1,4 +1,4 @@
-import { ScrollView } from 'react-native';
+import { Alert, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Account from '@/components/Account';
 import UserAvatar from '@/components/UserAvatar';
@@ -36,12 +36,11 @@ export default function ProfileScreen() {
   };
 
   return (
-
     <SafeAreaView>
       <ScrollView className='flex-1'>
         <Card className='flex-1 bg-gray-400 m-3'>
-        <UserAvatar size={125} url={avatarUrl} onUpload={handleAvatarUpload} />
-        <Account />
+          <UserAvatar size={125} url={avatarUrl} onUpload={handleAvatarUpload} />
+          <Account />
         </Card>
       </ScrollView>
     </SafeAreaView>

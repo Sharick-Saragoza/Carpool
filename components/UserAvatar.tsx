@@ -47,21 +47,86 @@ export default function UserAvatar({ url, size = 150, onUpload }: Props) {
         console.log('Error downloading image: ', error.message);
       }
     }
+  }
 
-    return (
-        <View>
-            <View className='items-center mb-5'>
-            <Avatar size='md' style={avatarSize}>
-                <AvatarFallbackText>Avatar</AvatarFallbackText>
-                <AvatarImage source={avatarUrl ? { uri: avatarUrl } : undefined} />
-            </Avatar>
-            </View>
+  async function uploadAvatar() {
+    try {
+      setUploading(true);
 
-            <View>
-                <Button onPress={uploadAvatar} disabled={uploading}>
-                    <ButtonText>{uploading ? 'Uploading ...' : 'Upload'}</ButtonText>
-                </Button>
-            </View>
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: false,
+        allowsEditing: true,
+        quality: 1,
+        exif: false,
+      });
+
+      if (result.canceled || !result.assets || result.assets.length === 0) {
+        console.log('User cancelled image picker.');
+        return;
+      }
+
+      const image = result.assets[0];
+      if (!image.uri) throw new Error('No image URI!');
+
+      if (devMode) {
+        console.log('[DEV MODE] Mock upload:', image.uri);
+        setAvatarUrl(image.uri);
+        setTimeout(() => {
+          onUpload(image.uri);
+          setUploading(false);
+          Alert.alert('Mock upload complete!');
+        }, 500);
+        return;
+      }
+
+      const arraybuffer = await fetch(image.uri).then((res) =>
+        res.arrayBuffer(),
+      );
+      const fileExt = image.uri.split('.').pop()?.toLowerCase() ?? 'jpeg';
+      const path = `${Date.now()}.${fileExt}`;
+
+      const { data, error: uploadError } = await supabase!.storage
+        .from('avatars')
+        .upload(path, arraybuffer, {
+          contentType: image.mimeType ?? 'image/jpeg',
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrlData } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(path);
+
+      const publicUrl = publicUrlData.publicUrl;
+      setAvatarUrl(publicUrl);
+      onUpload(publicUrl);
+      Alert.alert('Upload complete!');
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      } else {
+        throw error;
+      }
+    } finally {
+      setUploading(false);
+    }
+  }
+  
+  return (
+      <View>
+        <View className='items-center mb-5'>
+        <Avatar size='md' style={avatarSize}>
+            <AvatarFallbackText>Avatar</AvatarFallbackText>
+            <AvatarImage source={avatarUrl ? { uri: avatarUrl } : undefined} />
+        </Avatar>
         </View>
-    );
+
+        <View>
+            <Button onPress={uploadAvatar} disabled={uploading}>
+                <ButtonText>{uploading ? 'Uploading ...' : 'Upload'}</ButtonText>
+            </Button>
+        </View>
+    </View>
+  );
 }
